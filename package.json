@@ -8,8 +8,7 @@
   },
   "license": "MIT",
   "type": "module",
-  "main": "main/index.js",
-  "browser": "browser/index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "export NODE_TLS_REJECT_UNAUTHORIZED=0; NODE_OPTIONS='--experimental-vm-modules' npx jest --testTimeout=1000000 --runInBand",
     "jsdoc": "npx jsdoc -r src README.md -d docs/built -c docs/jsdoc.config.json"
