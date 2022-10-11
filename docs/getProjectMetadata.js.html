@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>getProjectMetadata.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://code.roche.com/vida/artifactdb.js" target="_blank" class="menu-item" id="repository" >Code Repo</a></h2><h3>Classes</h3><ul><li><a href="HttpError.html">HttpError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#extractByNameOrIndex">extractByNameOrIndex</a></li><li><a href="global.html#getFile">getFile</a></li><li><a href="global.html#getFileMetadata">getFileMetadata</a></li><li><a href="global.html#getPermissions">getPermissions</a></li><li><a href="global.html#getProjectMetadata">getProjectMetadata</a></li><li><a href="global.html#getProjectMetadataNext">getProjectMetadataNext</a></li><li><a href="global.html#listProjects">listProjects</a></li><li><a href="global.html#listProjectsNext">listProjectsNext</a></li><li><a href="global.html#listProjectVersions">listProjectVersions</a></li><li><a href="global.html#packId">packId</a></li><li><a href="global.html#parseLinkHeader">parseLinkHeader</a></li><li><a href="global.html#unpackId">unpackId</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">getProjectMetadata.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as err from "./HttpError.js";
+import * as ph from "./parseLinkHeader.js";
+
+/**
+ * Get a project's metadata from an ArtifactDB REST API.
+ *
+ * @param {string} baseUrl - Base URL of the REST API.
+ * @param {string} project - Name of the project.
+ * @param {object} [options={}] - Optional parameters.
+ * @param {?string} [options.version=null] version - Version of interest.
+ * If `null`, the constructed endpoint will return metadata for all versions of the project.
+ * @param {number} [options.number=50] - Number of metadata entries to return in the first page.
+ * This may be interpreted by the API as a hint or as a maximum.
+ * @param {?function} [options.getFun=null] - Function that accepts a single string containing a URL and returns a Response object (or a promise resolving to a Response).
+ * Defaults to the in-built `fetch` function with no further arguments.
+ *
+ * @return {Object} Object containing:
+ *
+ * - `metadata`, an array of objects containing metadata for each file artifact in this project, or a specific version of the project.
+ *   Each object is of the same format as described in {@linkcode getFileMetadata}.
+ * - `next_page`, a string containing the URL to the next page of file metadata, to be used as `pageUrl`.
+ *   If this is absent, it can be assumed that there are no further pages.
+ *
+ * @async
+ */
+export async function getProjectMetadata(baseUrl, project, { version = null, number = 50, getFun = null } = {}) {
+    let page_url = "/projects/" + encodeURIComponent(project);
+    if (version !== null) {
+        page_url += "/version/" + encodeURIComponent(version);
+    }
+    page_url += "/metadata";
+
+    if (getFun === null) {
+        getFun = fetch;
+    }
+
+    return getProjectMetadataNext(baseUrl, page_url, { number: number, getFun: getFun });
+}
+
+/**
+ * Continue listing available projects from an ArtifactDB REST API.
+ *
+ * @param {string} baseUrl - Base URL of the REST API.
+ * @param {string} pageUrl - URL component to the next page of results.
+ * @param {object} [options={}] - Optional parameters.
+ * @param {number} [options.number=50] - Number of metadata entries to return in the current page.
+ * This may be interpreted by the API as a hint or as a maximum.
+ * @param {?function} [options.getFun=null] - Function that accepts a single string containing a URL and returns a Response object (or a promise resolving to a Response).
+ * Defaults to the in-built `fetch` function with no further arguments.
+ *
+ * @return {Object} Object containing:
+ *
+ * - `metadata`, an array of objects containing metadata for each file artifact in this project, or a specific version of the project.
+ *   Each object is of the same format as described in {@linkcode getFileMetadata}.
+ * - `next_page`, a string containing the URL to the next page of file metadata, to be used as `pageUrl`.
+ *   If this is absent, it can be assumed that there are no further pages.
+ *
+ * @async
+ */
+export async function getProjectMetadataNext(baseUrl, pageUrl, { number = 50, getFun = null } = {}) {
+    let collected = [];
+    let pageFun = async res => {
+        let info = await res.json();
+        for (const x of info.results) {
+            collected.push(x);
+        }
+        return collected.length > number;
+    };
+
+    let next_url = await ph.paginateLinks(baseUrl, pageUrl, getFun, pageFun, "failed to get project metadata");
+    let output = { metadata: collected };
+    if (next_url !== null) {
+        output.next_page = next_url;
+    }
+
+    return output;
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Tue Oct 11 2022 06:11:00 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>
