@@ -8,3 +8,17 @@ export var globalRequestHeaders = {};
 export function quickGet(url) {
     return fetch(url, { headers: globalRequestHeaders });
 }
+
+export function quickPutJson(url, body) {
+    let opt = { 
+        method: "PUT", 
+        headers: { ...globalRequestHeaders }
+    };
+
+    if (body) {
+        opt.headers["Content-Type"] = "application/json";
+        opt.body = JSON.stringify(body);
+    }
+
+    return fetch(url, opt);
+}

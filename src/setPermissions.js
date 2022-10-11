@@ -12,7 +12,7 @@ import * as gp from "./getPermissions.js";
  * If `null`, the visibility is unchanged.
  * @param {?Array} [options.viewers=null] - Array of strings containing the user names of the allowed viewers.
  * If `null`, the set of viewers is unchanged.
- * @param {?Array} [options.owners=null] - Array of strings containing the user names of the allowed owners.
+ * @param {?Array} [options.owners=null] - Array of strings containing the user names of the project owners.
  * If `null`, the set of owners is unchanged.
  * @param {string} [options.action="append"] - String specifying how to combine `viewers` and `owners` with the corresponding values in the existing permissions.
  *
@@ -35,17 +35,9 @@ import * as gp from "./getPermissions.js";
 export async function setPermissions(baseUrl, project, { isPublic = null, viewers = null, owners = null, action = "append", getFun = null, putFun = null } = {}) {
     let perm_req = create_request(baseUrl, project, isPublic, viewers, owners, action, getFun);
     let url = baseUrl + "/projects/" + encodeURIComponent(project) + "/permissions";
-    
+
     if (putFun === null) {
-        putFun = (url, body) => {
-            return fetch(url, {
-                headers: {
-                    "Content-Type": "application/json",
-                    ...gh.globalRequestHeaders
-                },
-                body: JSON.stringify(body)
-            });
-        };
+        putFun = gh.quickPutJson;
     }
 
     let res = await putFun(url, perm_req);
