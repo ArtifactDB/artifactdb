@@ -1,0 +1,25 @@
+{
+  "name": "whoople",
+  "version": "0.1.0",
+  "description": "Javascript client for working with the ArtifactDB REST API.",
+  "author": {
+    "name": "Aaron Lun",
+    "email": "infinite.monkeys.with.keyboards@gmail.com"
+  },
+  "license": "MIT",
+  "type": "module",
+  "main": "main/index.js",
+  "browser": "browser/index.js",
+  "scripts": {
+    "test": "export NODE_TLS_REJECT_UNAUTHORIZED=0; NODE_OPTIONS='--experimental-vm-modules' npx jest --testTimeout=1000000 --runInBand",
+    "jsdoc": "npx jsdoc -r src README.md -d docs/built -c docs/jsdoc.config.json"
+  },
+  "devDependencies": {
+    "docdash": "^1.2.0",
+    "jest": "^27.4.7",
+    "jsdoc": "^3.6.10"
+  },
+  "repository": "https://github.com/ArtifactDB/whoople",
+  "homepage": "https://github.com/ArtifactDB/whoople",
+  "bugs": "https://github.com/ArtifactDB/whoople/issues"
+}

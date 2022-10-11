@@ -1,0 +1,9 @@
+build.sh
+docs/
+extern/
+tests/
+src/
+.parcel-cache
+.github
+.yarn
+.gitlab-ci.yml
