@@ -23,11 +23,11 @@ export async function listProjectVersions(baseUrl, project, { getFun = null } = 
         getFun = fetch;
     }
     let res = await getFun(out);
-    err.checkHttpResponse(res, "failed to list project versions for '" + project + "'");
+    await err.checkHttpResponse(res, "failed to list project versions for '" + project + "'");
 
     let info = await res.json();
     let versions = [];
-    for (const x of info.agg) {
+    for (const x of info.aggs) {
         versions.push(x["_extra.version"]);
     }
 

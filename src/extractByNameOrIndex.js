@@ -16,7 +16,7 @@ export function extractByNameOrIndex(x, index, { name = "name", context = "array
                 return x[i];
             }
         }
-        throw new Error("no entry named '" + name + "' in " + context);
+        throw new Error("no entry named '" + index + "' in " + context);
     }
 
     if (index >= x.length || index < 0) {

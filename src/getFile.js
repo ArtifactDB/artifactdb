@@ -28,7 +28,7 @@ export async function getFile(baseUrl, id, { downloadFun = null, getFun = null }
         }
         downloadFun = async x => {
             let res = await getFun(x);
-            err.checkHttpResponse(res, "failed to retrieve file for '" + id + "'");
+            await err.checkHttpResponse(res, "failed to retrieve file for '" + id + "'");
             return await res.arrayBuffer();
         };
     }

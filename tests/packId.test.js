@@ -1,4 +1,4 @@
-import * as adb from "../src/utils.js";
+import * as adb from "../src/index.js";
 
 test("packing and unpacking work as expected", () => {
     let packed = adb.packId("GPA2", "foo", "v1");

@@ -9,15 +9,15 @@ export class HttpError extends Error {
     }
 }
 
-export function checkResponse(res, msg) {
+export async function checkHttpResponse(res, msg) {
     if (res.ok) {
         return;
     }
 
     let info = await res.json();
     if (info.status == "error") {
-        throw new err.HttpError(msg + "; " + info.reason, res.status);
+        throw new HttpError(msg + "; " + info.reason, res.status);
     } 
 
-    throw new err.HttpError(msg, res.status);
+    throw new HttpError(msg, res.status);
 }

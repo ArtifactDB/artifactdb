@@ -15,6 +15,7 @@ import * as err from "./HttpError.js";
  *
  * - `$schema`, a string specifying the schema for this metadata document.
  * - `path`, a string specifying the relative path of the file inside the project.
+ * - `_extra`, an object containing extra metadata about this resource from the ArtifactDB instance.
  *
  * @async
  */
@@ -28,6 +29,7 @@ export async function getFileMetadata(baseUrl, id, { followLink = true, getFun =
         getFun = fetch;
     }
     let res = await getFun(out);
-    err.checkHttpResponse(res, "failed to retrieve metadata for '" + id + "'");
+    await err.checkHttpResponse(res, "failed to retrieve metadata for '" + id + "'");
+
     return await res.json();
 }
