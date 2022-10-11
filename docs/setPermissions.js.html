@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>setPermissions.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://code.roche.com/vida/artifactdb.js" target="_blank" class="menu-item" id="repository" >Code Repo</a></h2><h3>Classes</h3><ul><li><a href="HttpError.html">HttpError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#extractByNameOrIndex">extractByNameOrIndex</a></li><li><a href="global.html#getFile">getFile</a></li><li><a href="global.html#getFileMetadata">getFileMetadata</a></li><li><a href="global.html#getPermissions">getPermissions</a></li><li><a href="global.html#getProjectMetadata">getProjectMetadata</a></li><li><a href="global.html#getProjectMetadataNext">getProjectMetadataNext</a></li><li><a href="global.html#globalRequestHeaders">globalRequestHeaders</a></li><li><a href="global.html#listProjects">listProjects</a></li><li><a href="global.html#listProjectsNext">listProjectsNext</a></li><li><a href="global.html#listProjectVersions">listProjectVersions</a></li><li><a href="global.html#packId">packId</a></li><li><a href="global.html#parseLinkHeader">parseLinkHeader</a></li><li><a href="global.html#setPermissions">setPermissions</a></li><li><a href="global.html#unpackId">unpackId</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">setPermissions.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as err from "./HttpError.js";
+import * as gh from "./globalRequestHeaders.js";
+import * as gp from "./getPermissions.js";
+
+/**
+ * Set permissions for a project.
+ *
+ * @param {string} baseUrl - Base URL of the REST API.
+ * @param {string} project - Name of the project.
+ * @param {object} [options={}] - Optional parameters.
+ * @param {?boolean} [options.isPublic=null] - Whether to make the project publicly visible.
+ * If `null`, the visibility is unchanged.
+ * @param {?Array} [options.viewers=null] - Array of strings containing the user names of the allowed viewers.
+ * If `null`, the set of viewers is unchanged.
+ * @param {?Array} [options.owners=null] - Array of strings containing the user names of the allowed owners.
+ * If `null`, the set of owners is unchanged.
+ * @param {string} [options.action="append"] - String specifying how to combine `viewers` and `owners` with the corresponding values in the existing permissions.
+ *
+ * - `"append"` will add any specified users to the existing set.
+ * - `"remove"` will remove any specified users from the existing set.
+ * - `"set"` will replace the existing set with the specified users.
+ *
+ * @param {?function} [options.getFun=null] - Function that accepts a single string containing a URL and returns a Response object, see {@linkcode getPermissions}.
+ * @param {?function} [options.putFun=null] - Function that performs a PUT request and returns a Response object.
+ * It should accept:
+ *
+ * - A string containing the request URL.
+ * - An object containing the permissions to be sent in the request.
+ * 
+ * Defaults to the in-built `fetch` function with headers defined by {@linkcode globalRequestHeaders}.
+ *
+ * @return Permissions are set in the specified project.
+ * Nothing is returned.
+ */
+export async function setPermissions(baseUrl, project, { isPublic = null, viewers = null, owners = null, action = "append", getFun = null, putFun = null } = {}) {
+    let perm_req = create_request(baseUrl, project, isPublic, viewers, owners, action, getFun);
+    let url = baseUrl + "/projects/" + encodeURIComponent(project) + "/permissions";
+    
+    if (putFun === null) {
+        putFun = (url, body) => {
+            return fetch(url, {
+                headers: {
+                    "Content-Type": "application/json",
+                    ...gh.globalRequestHeaders
+                },
+                body: JSON.stringify(body)
+            });
+        };
+    }
+
+    let res = await putFun(url, perm_req);
+    err.checkHttpResponse(res, "failed to set permissions for project '" + project + "'");
+
+    return;
+}
+
+export async function create_request(baseUrl, project, { isPublic = null, viewers = null, owners = null, action = "append", getFun = null } = {}) {
+    let perm_req = {};
+    if (isPublic !== null) {
+        perm_req.read_access = (isPublic ? "public" : "viewers");
+    }
+
+    if (action == "set") {
+        if (viewers !== null) {
+            perm_req.viewers = viewers;
+        }
+        if (owners !== null) {
+            perm_req.owners = owners;
+        }
+
+    } else if (action != "append" &amp;&amp; action != "remove") {
+        throw new Error("unknown action '" + action + "' for setting permissions");
+
+    } else if (viewers !== null || owners !== null) {
+        let existing = await gp.getPermissions(baseUrl, project, { getFun: getFun });
+
+        if (viewers !== null) {
+            perm_req.viewers = add_or_remove_users(viewers, existing.viewers, action);
+        }
+        if (owners !== null) {
+            perm_req.owners = add_or_remove_users(owners, existing.owners, action);
+        }
+    }
+    return perm_req;
+}
+
+export function add_or_remove_users(x, old, action) {
+    if (action == "append") {
+        let already = new Set(old);
+        let output = old.slice();
+        for (const u of x) {
+            if (!already.has(u)) {
+                already.add(u);
+                output.push(u);
+            }
+        }
+        return output;
+    }
+
+    let remove_list= new Set(x);
+    let output = [];
+    for (const u of old) {
+        if (!remove_list.has(u)) {
+            output.push(u);
+        }
+    }
+    return output;
+}
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Tue Oct 11 2022 16:48:53 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

@@ -29,7 +29,7 @@
     
     <input type="text" id="nav-search" placeholder="Search" />
     
-    <h2><a href="index.html">Home</a></h2><h2><a href="https://code.roche.com/vida/artifactdb.js" target="_blank" class="menu-item" id="repository" >Code Repo</a></h2><h3>Classes</h3><ul><li><a href="HttpError.html">HttpError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#extractByNameOrIndex">extractByNameOrIndex</a></li><li><a href="global.html#getFile">getFile</a></li><li><a href="global.html#getFileMetadata">getFileMetadata</a></li><li><a href="global.html#getPermissions">getPermissions</a></li><li><a href="global.html#getProjectMetadata">getProjectMetadata</a></li><li><a href="global.html#getProjectMetadataNext">getProjectMetadataNext</a></li><li><a href="global.html#listProjects">listProjects</a></li><li><a href="global.html#listProjectsNext">listProjectsNext</a></li><li><a href="global.html#listProjectVersions">listProjectVersions</a></li><li><a href="global.html#packId">packId</a></li><li><a href="global.html#parseLinkHeader">parseLinkHeader</a></li><li><a href="global.html#unpackId">unpackId</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://code.roche.com/vida/artifactdb.js" target="_blank" class="menu-item" id="repository" >Code Repo</a></h2><h3>Classes</h3><ul><li><a href="HttpError.html">HttpError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#extractByNameOrIndex">extractByNameOrIndex</a></li><li><a href="global.html#getFile">getFile</a></li><li><a href="global.html#getFileMetadata">getFileMetadata</a></li><li><a href="global.html#getPermissions">getPermissions</a></li><li><a href="global.html#getProjectMetadata">getProjectMetadata</a></li><li><a href="global.html#getProjectMetadataNext">getProjectMetadataNext</a></li><li><a href="global.html#globalRequestHeaders">globalRequestHeaders</a></li><li><a href="global.html#listProjects">listProjects</a></li><li><a href="global.html#listProjectsNext">listProjectsNext</a></li><li><a href="global.html#listProjectVersions">listProjectVersions</a></li><li><a href="global.html#packId">packId</a></li><li><a href="global.html#parseLinkHeader">parseLinkHeader</a></li><li><a href="global.html#setPermissions">setPermissions</a></li><li><a href="global.html#unpackId">unpackId</a></li></ul>
 </nav>
 
 <div id="main">
@@ -116,6 +116,75 @@
 
     
 
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="globalRequestHeaders"><span class="type-signature"></span>globalRequestHeaders<span class="type-signature"></span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="globalRequestHeaders.js.html">globalRequestHeaders.js</a>, <a href="globalRequestHeaders.js.html#line6">line 6</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>Headers to be attached to all HTTP requests using the default functions (typically based on <code>fetch</code>).
+Keys are the header names while values are the header contents.
+This is mainly used to set the <code>Authorization</code> header for authentication.</p>
+</div>
+
+
+
+
+
+
+
+
+        
     
 
     
@@ -497,7 +566,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="getFile.js.html">getFile.js</a>, <a href="getFile.js.html#line22">line 22</a>
+        <a href="getFile.js.html">getFile.js</a>, <a href="getFile.js.html#line23">line 23</a>
     </li></ul></dd>
     
 
@@ -793,7 +862,7 @@
 
             <td class="description last"><p>Function that accepts a single string containing a URL and returns a Response object.
 Only used when <code>downloadFun</code> is not provided.
-Defaults to the in-built <code>fetch</code> function with no further arguments.</p></td>
+Defaults to the in-built <code>fetch</code> function with <a href="global.html#globalRequestHeaders"><code>globalRequestHeaders</code></a>.</p></td>
         </tr>
 
     
@@ -867,7 +936,7 @@ Defaults to the in-built <code>fetch</code> function with no further arguments.<
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="getFileMetadata.js.html">getFileMetadata.js</a>, <a href="getFileMetadata.js.html#line22">line 22</a>
+        <a href="getFileMetadata.js.html">getFileMetadata.js</a>, <a href="getFileMetadata.js.html#line23">line 23</a>
     </li></ul></dd>
     
 
@@ -1155,7 +1224,7 @@ Defaults to the in-built <code>fetch</code> function with no further arguments.<
             
 
             <td class="description last"><p>Function that accepts a single string containing a URL and returns a Response object (or a promise resolving to a Response).
-Defaults to the in-built <code>fetch</code> function with no further arguments.</p></td>
+Defaults to the in-built <code>fetch</code> function with <a href="global.html#globalRequestHeaders"><code>globalRequestHeaders</code></a>.</p></td>
         </tr>
 
     
@@ -1232,7 +1301,7 @@ This is guaranteed to contain at least the following properties:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="getPermissions.js.html">getPermissions.js</a>, <a href="getPermissions.js.html#line23">line 23</a>
+        <a href="getPermissions.js.html">getPermissions.js</a>, <a href="getPermissions.js.html#line24">line 24</a>
     </li></ul></dd>
     
 
@@ -1481,7 +1550,7 @@ This is guaranteed to contain at least the following properties:</p>
             
 
             <td class="description last"><p>Function that accepts a single string containing a URL and returns a Response object.
-Defaults to the in-built <code>fetch</code> function with no further arguments.</p></td>
+Defaults to the in-built <code>fetch</code> function with <a href="global.html#globalRequestHeaders"><code>globalRequestHeaders</code></a>.</p></td>
         </tr>
 
     
@@ -1562,7 +1631,7 @@ This should be one of <code>&quot;owners&quot;</code> or <code>&quot;none&quot;<
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="getProjectMetadata.js.html">getProjectMetadata.js</a>, <a href="getProjectMetadata.js.html#line26">line 26</a>
+        <a href="getProjectMetadata.js.html">getProjectMetadata.js</a>, <a href="getProjectMetadata.js.html#line27">line 27</a>
     </li></ul></dd>
     
 
@@ -1893,7 +1962,7 @@ This may be interpreted by the API as a hint or as a maximum.</p></td>
             
 
             <td class="description last"><p>Function that accepts a single string containing a URL and returns a Response object (or a promise resolving to a Response).
-Defaults to the in-built <code>fetch</code> function with no further arguments.</p></td>
+Defaults to the in-built <code>fetch</code> function with the <a href="global.html#globalRequestHeaders"><code>globalRequestHeaders</code></a>.</p></td>
         </tr>
 
     
@@ -1970,7 +2039,7 @@ If this is absent, it can be assumed that there are no further pages.</li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="getProjectMetadata.js.html">getProjectMetadata.js</a>, <a href="getProjectMetadata.js.html#line60">line 60</a>
+        <a href="getProjectMetadata.js.html">getProjectMetadata.js</a>, <a href="getProjectMetadata.js.html#line56">line 56</a>
     </li></ul></dd>
     
 
@@ -2259,7 +2328,7 @@ This may be interpreted by the API as a hint or as a maximum.</p></td>
             
 
             <td class="description last"><p>Function that accepts a single string containing a URL and returns a Response object (or a promise resolving to a Response).
-Defaults to the in-built <code>fetch</code> function with no further arguments.</p></td>
+Defaults to the in-built <code>fetch</code> function with the <a href="global.html#globalRequestHeaders"><code>globalRequestHeaders</code></a>.</p></td>
         </tr>
 
     
@@ -2336,7 +2405,7 @@ If this is absent, it can be assumed that there are no further pages.</li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="listProjects.js.html">listProjects.js</a>, <a href="listProjects.js.html#line22">line 22</a>
+        <a href="listProjects.js.html">listProjects.js</a>, <a href="listProjects.js.html#line23">line 23</a>
     </li></ul></dd>
     
 
@@ -2590,7 +2659,7 @@ This may be interpreted by the API as a hint or as a maximum.</p></td>
             
 
             <td class="description last"><p>Function that accepts a single string containing a URL and returns a Response object (or a promise resolving to a Response).
-Defaults to the in-built <code>fetch</code> function with no further arguments.</p></td>
+Defaults to the in-built <code>fetch</code> function with the <a href="global.html#globalRequestHeaders"><code>globalRequestHeaders</code></a>.</p></td>
         </tr>
 
     
@@ -2666,7 +2735,7 @@ If this is absent, it can be assumed that there are no further pages.</li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="listProjects.js.html">listProjects.js</a>, <a href="listProjects.js.html#line48">line 48</a>
+        <a href="listProjects.js.html">listProjects.js</a>, <a href="listProjects.js.html#line46">line 46</a>
     </li></ul></dd>
     
 
@@ -2955,7 +3024,7 @@ This may be interpreted by the API as a hint or as a maximum.</p></td>
             
 
             <td class="description last"><p>Function that accepts a single string containing a URL and returns a Response object (or a promise resolving to a Response).
-Defaults to the in-built <code>fetch</code> function with no further arguments.</p></td>
+Defaults to the in-built <code>fetch</code> function with the <a href="global.html#globalRequestHeaders"><code>globalRequestHeaders</code></a>.</p></td>
         </tr>
 
     
@@ -3031,7 +3100,7 @@ If this is absent, it can be assumed that there are no further pages.</li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="listProjectVersions.js.html">listProjectVersions.js</a>, <a href="listProjectVersions.js.html#line19">line 19</a>
+        <a href="listProjectVersions.js.html">listProjectVersions.js</a>, <a href="listProjectVersions.js.html#line20">line 20</a>
     </li></ul></dd>
     
 
@@ -3280,7 +3349,7 @@ If this is absent, it can be assumed that there are no further pages.</li>
             
 
             <td class="description last"><p>Function that accepts a single string containing a URL and returns a Response object (or a promise resolving to a Response).
-Defaults to the in-built <code>fetch</code> function with no further arguments.</p></td>
+Defaults to the in-built <code>fetch</code> function with the <a href="global.html#globalRequestHeaders"><code>globalRequestHeaders</code></a>.</p></td>
         </tr>
 
     
@@ -3710,6 +3779,531 @@ This should not contain <code>&quot;@&quot;</code>.</p></td>
 
     
 
+    <h4 class="name" id="setPermissions"><span class="type-signature"></span>setPermissions<span class="signature">(baseUrl, project, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="setPermissions.js.html">setPermissions.js</a>, <a href="setPermissions.js.html#line35">line 35</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>Set permissions for a project.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>baseUrl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Base URL of the REST API.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>project</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Name of the project.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Optional parameters.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>isPublic</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>null</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to make the project publicly visible.
+If <code>null</code>, the visibility is unchanged.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>viewers</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>null</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Array of strings containing the user names of the allowed viewers.
+If <code>null</code>, the set of viewers is unchanged.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>owners</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>null</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Array of strings containing the user names of the allowed owners.
+If <code>null</code>, the set of owners is unchanged.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>action</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>"append"</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>String specifying how to combine <code>viewers</code> and <code>owners</code> with the corresponding values in the existing permissions.</p>
+<ul>
+<li><code>&quot;append&quot;</code> will add any specified users to the existing set.</li>
+<li><code>&quot;remove&quot;</code> will remove any specified users from the existing set.</li>
+<li><code>&quot;set&quot;</code> will replace the existing set with the specified users.</li>
+</ul></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>getFun</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>null</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Function that accepts a single string containing a URL and returns a Response object, see <a href="global.html#getPermissions"><code>getPermissions</code></a>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>putFun</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>null</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Function that performs a PUT request and returns a Response object.
+It should accept:</p>
+<ul>
+<li>A string containing the request URL.</li>
+<li>An object containing the permissions to be sent in the request.</li>
+</ul>
+<p>Defaults to the in-built <code>fetch</code> function with headers defined by <a href="global.html#globalRequestHeaders"><code>globalRequestHeaders</code></a>.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Permissions are set in the specified project.
+Nothing is returned.</p>
+</div>
+
+
+
+    
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="unpackId"><span class="type-signature"></span>unpackId<span class="signature">(id)</span><span class="type-signature"> &rarr; {object}</span></h4>
 
     
@@ -3885,7 +4479,7 @@ where <code>&lt;PROJECT&gt;</code> should not contain <code>:</code> and <code>&
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Tue Oct 11 2022 16:33:35 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Tue Oct 11 2022 16:48:53 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
