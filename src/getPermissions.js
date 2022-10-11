@@ -1,4 +1,5 @@
 import * as err from "./HttpError.js";
+import * as gh from "./globalRequestHeaders.js";
 
 /**
  * Get permissions for a project.
@@ -7,7 +8,7 @@ import * as err from "./HttpError.js";
  * @param {string} project - Name of the project.
  * @param {object} [options={}] - Optional parameters.
  * @param {?function} [options.getFun=null] - Function that accepts a single string containing a URL and returns a Response object.
- * Defaults to the in-built `fetch` function with no further arguments.
+ * Defaults to the in-built `fetch` function with {@linkcode globalRequestHeaders}.
  *
  * @return {Object} The permissions of the project.
  * This is guaranteed to contain:
@@ -24,7 +25,7 @@ export async function getPermissions(baseUrl, project, { getFun = null } = {}) {
     let url = baseUrl + "/projects/" + encodeURIComponent(project) + "/permissions";
 
     if (getFun == null) {
-        getFun = fetch;
+        getFun = gh.quickGet;
     }
 
     let res = await getFun(url);

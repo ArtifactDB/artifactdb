@@ -1,5 +1,6 @@
 import * as err from "./HttpError.js";
 import * as ph from "./parseLinkHeader.js";
+import * as gh from "./globalRequestHeaders.js";
 
 /**
  * Get a project's metadata from an ArtifactDB REST API.
@@ -12,7 +13,7 @@ import * as ph from "./parseLinkHeader.js";
  * @param {number} [options.number=50] - Number of metadata entries to return in the first page.
  * This may be interpreted by the API as a hint or as a maximum.
  * @param {?function} [options.getFun=null] - Function that accepts a single string containing a URL and returns a Response object (or a promise resolving to a Response).
- * Defaults to the in-built `fetch` function with no further arguments.
+ * Defaults to the in-built `fetch` function with the {@linkcode globalRequestHeaders}.
  *
  * @return {Object} Object containing:
  *
@@ -29,11 +30,6 @@ export async function getProjectMetadata(baseUrl, project, { version = null, num
         page_url += "/version/" + encodeURIComponent(version);
     }
     page_url += "/metadata";
-
-    if (getFun === null) {
-        getFun = fetch;
-    }
-
     return getProjectMetadataNext(baseUrl, page_url, { number: number, getFun: getFun });
 }
 
@@ -46,7 +42,7 @@ export async function getProjectMetadata(baseUrl, project, { version = null, num
  * @param {number} [options.number=50] - Number of metadata entries to return in the current page.
  * This may be interpreted by the API as a hint or as a maximum.
  * @param {?function} [options.getFun=null] - Function that accepts a single string containing a URL and returns a Response object (or a promise resolving to a Response).
- * Defaults to the in-built `fetch` function with no further arguments.
+ * Defaults to the in-built `fetch` function with the {@linkcode globalRequestHeaders}.
  *
  * @return {Object} Object containing:
  *
@@ -58,6 +54,10 @@ export async function getProjectMetadata(baseUrl, project, { version = null, num
  * @async
  */
 export async function getProjectMetadataNext(baseUrl, pageUrl, { number = 50, getFun = null } = {}) {
+    if (getFun === null) {
+        getFun = gh.quickGet;
+    }
+
     let collected = [];
     let pageFun = async res => {
         let info = await res.json();

@@ -1,4 +1,5 @@
 import * as err from "./HttpError.js";
+import * as gh from "./globalRequestHeaders.js";
 
 /**
  * List the available versions from an ArtifactDB REST API.
@@ -7,7 +8,7 @@ import * as err from "./HttpError.js";
  * @param {string} project - Name of the project.
  * @param {object} [options={}] - Optional parameters.
  * @param {?function} [options.getFun=null] - Function that accepts a single string containing a URL and returns a Response object (or a promise resolving to a Response).
- * Defaults to the in-built `fetch` function with no further arguments.
+ * Defaults to the in-built `fetch` function with the {@linkcode globalRequestHeaders}.
  *
  * @return {Object} Object containing:
  *
@@ -20,7 +21,7 @@ export async function listProjectVersions(baseUrl, project, { getFun = null } = 
     let out = baseUrl + "/projects/" + encodeURIComponent(project) + "/versions";
 
     if (getFun === null) {
-        getFun = fetch;
+        getFun = gh.quickGet;
     }
     let res = await getFun(out);
     await err.checkHttpResponse(res, "failed to list project versions for '" + project + "'");

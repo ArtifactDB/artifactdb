@@ -1,4 +1,5 @@
 import * as err from "./HttpError.js";
+import * as gh from "./globalRequestHeaders.js";
 
 /**
  * Get a file's metadata from an ArtifactDB REST API.
@@ -8,7 +9,7 @@ import * as err from "./HttpError.js";
  * @param {object} [options={}] - Optional parameters.
  * @param {boolean} [options.followLink=true] - Whether to follow links from redirection schemas.
  * @param {?function} [options.getFun=null] - Function that accepts a single string containing a URL and returns a Response object (or a promise resolving to a Response).
- * Defaults to the in-built `fetch` function with no further arguments.
+ * Defaults to the in-built `fetch` function with {@linkcode globalRequestHeaders}.
  *
  * @return {Object} Object containing the metadata for this file artifact.
  * This is guaranteed to contain at least the following properties:
@@ -26,7 +27,7 @@ export async function getFileMetadata(baseUrl, id, { followLink = true, getFun =
     }
 
     if (getFun === null) {
-        getFun = fetch;
+        getFun = gh.quickGet;
     }
     let res = await getFun(out);
     await err.checkHttpResponse(res, "failed to retrieve metadata for '" + id + "'");

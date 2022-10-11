@@ -1,4 +1,5 @@
 import * as err from "./HttpError.js";
+import * as gh from "./globalRequestHeaders.js";
 
 /**
  * Download a file from an ArtifactDB REST API.
@@ -14,7 +15,7 @@ import * as err from "./HttpError.js";
  * Defaults to a call to `getFun`.
  * @param {?function} [options.getFun=null] - Function that accepts a single string containing a URL and returns a Response object.
  * Only used when `downloadFun` is not provided.
- * Defaults to the in-built `fetch` function with no further arguments.
+ * Defaults to the in-built `fetch` function with {@linkcode globalRequestHeaders}.
  *
  * @return {string|ArrayBuffer} Depending on `downloadFun`, either the contents of the file or a path to the file.
  * @async
@@ -24,7 +25,7 @@ export async function getFile(baseUrl, id, { downloadFun = null, getFun = null }
 
     if (downloadFun === null) {
         if (getFun === null) {
-            getFun = fetch;
+            getFun = gh.quickGet;
         }
         downloadFun = async x => {
             let res = await getFun(x);
