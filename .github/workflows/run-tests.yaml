@@ -22,4 +22,6 @@ jobs:
       run: npm i --include=dev
 
     - name: Run tests
-      run: node --experimental-vm-modules node_modules/jest/bin/jest.js
+      run: node --experimental-vm-modules node_modules/jest/bin/jest.js --testTimeout=120000
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_BOT_TOKEN }}

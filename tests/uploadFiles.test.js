@@ -114,13 +114,13 @@ maybe("link-based uploads work correctly", async () => {
 })
 
 maybe("upload wrapper works correctly", async () => {
-    let paths = {};
+    let checksums = {};
     for (const [k, v] of Object.entries(contents)) {
-        paths[k] = crypto.createHash("md5").update(v).digest("hex");
+        checksums[k] = crypto.createHash("md5").update(v).digest("hex");
     }
 
     let version = String(Date.now());
-    await adb.uploadProject(baseUrl, "test-js-upload", version, { initArgs: { expires: 1 } });
+    await adb.uploadProject(exampleUrl, "test-js-upload", version, checksums, contents, { initArgs: { expires: 1 } });
 
     // Checking the results.
     let stuff = await adb.getFile(exampleUrl, adb.packId("test-js-upload", "Sebastien.txt", version));
