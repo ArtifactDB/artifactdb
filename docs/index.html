@@ -29,7 +29,7 @@
     
     <input type="text" id="nav-search" placeholder="Search" />
     
-    <h2><a href="index.html">Home</a></h2><h2><a href="https://code.roche.com/vida/artifactdb.js" target="_blank" class="menu-item" id="repository" >Code Repo</a></h2><h3>Classes</h3><ul><li><a href="HttpError.html">HttpError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#abortUpload">abortUpload</a></li><li><a href="global.html#completeUpload">completeUpload</a></li><li><a href="global.html#createUploadStartUrl">createUploadStartUrl</a></li><li><a href="global.html#extractByNameOrIndex">extractByNameOrIndex</a></li><li><a href="global.html#getFile">getFile</a></li><li><a href="global.html#getFileMetadata">getFileMetadata</a></li><li><a href="global.html#getPermissions">getPermissions</a></li><li><a href="global.html#getProjectMetadata">getProjectMetadata</a></li><li><a href="global.html#getProjectMetadataNext">getProjectMetadataNext</a></li><li><a href="global.html#globalRequestHeaders">globalRequestHeaders</a></li><li><a href="global.html#initializeUpload">initializeUpload</a></li><li><a href="global.html#listProjects">listProjects</a></li><li><a href="global.html#listProjectsNext">listProjectsNext</a></li><li><a href="global.html#listProjectVersions">listProjectVersions</a></li><li><a href="global.html#packId">packId</a></li><li><a href="global.html#parseLinkHeader">parseLinkHeader</a></li><li><a href="global.html#setPermissions">setPermissions</a></li><li><a href="global.html#unpackId">unpackId</a></li><li><a href="global.html#uploadFiles">uploadFiles</a></li><li><a href="global.html#uploadProject">uploadProject</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://code.roche.com/vida/artifactdb.js" target="_blank" class="menu-item" id="repository" >Code Repo</a></h2><h3>Classes</h3><ul><li><a href="HttpError.html">HttpError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#abortUpload">abortUpload</a></li><li><a href="global.html#completeUpload">completeUpload</a></li><li><a href="global.html#createUploadStartUrl">createUploadStartUrl</a></li><li><a href="global.html#extractByNameOrIndex">extractByNameOrIndex</a></li><li><a href="global.html#getFile">getFile</a></li><li><a href="global.html#getFileMetadata">getFileMetadata</a></li><li><a href="global.html#getPermissions">getPermissions</a></li><li><a href="global.html#getProjectMetadata">getProjectMetadata</a></li><li><a href="global.html#getProjectMetadataNext">getProjectMetadataNext</a></li><li><a href="global.html#globalRequestHeaders">globalRequestHeaders</a></li><li><a href="global.html#initializeUpload">initializeUpload</a></li><li><a href="global.html#listProjects">listProjects</a></li><li><a href="global.html#listProjectsNext">listProjectsNext</a></li><li><a href="global.html#listProjectVersions">listProjectVersions</a></li><li><a href="global.html#packId">packId</a></li><li><a href="global.html#parseLinkHeader">parseLinkHeader</a></li><li><a href="global.html#prepareCloneUpload">prepareCloneUpload</a></li><li><a href="global.html#setPermissions">setPermissions</a></li><li><a href="global.html#unpackId">unpackId</a></li><li><a href="global.html#uploadFiles">uploadFiles</a></li><li><a href="global.html#uploadProject">uploadProject</a></li></ul>
 </nav>
 
 <div id="main">
@@ -76,19 +76,19 @@ The general aim is to enable the use of ArtifactDB in Javascript-based web appli
 let example_url = &quot;https://gypsum-test.aaron-lun.workers.dev&quot;;
 
 // Fetch metadata for a file:
-let meta = await adb.getFileMetadata(example_url, &quot;test-zircon-upload:blah.txt@base&quot;);
+let meta = await adb.getFileMetadata(example_url, &quot;test-public:blah.txt@base&quot;);
 
 // Fetch the file contents (defaulting to ArrayBuffer):
-let contents = await adb.getFile(example_url, &quot;test-zircon-upload:blah.txt@base&quot;);
+let contents = await adb.getFile(example_url, &quot;test-public:blah.txt@base&quot;);
 
 // Fetch all files for a given project's version:
-let project_meta = await adb.getProjectMetadata(example_url, &quot;test-zircon-upload&quot;, { version: &quot;base&quot; });
+let project_meta = await adb.getProjectMetadata(example_url, &quot;test-public&quot;, { version: &quot;base&quot; });
 
 // See the project permissions:
-let project_perm = await adb.getPermissions(example_url, &quot;test-zircon-upload&quot;);
+let project_perm = await adb.getPermissions(example_url, &quot;test-public&quot;);
 
 // List available versions:
-let project_versions = await adb.listProjectVersions(example_url, &quot;test-zircon-upload&quot;);
+let project_versions = await adb.listProjectVersions(example_url, &quot;test-public&quot;);
 </code></pre>
 <p>Check out the <a href="https://artifactdb.github.io/artifactdb">reference documentation</a> for more details.</p>
 <h2>Using a different request function</h2>
@@ -131,7 +131,7 @@ for (const [k, v] of Object.entries(contents)) {
 // Performing the upload. For test projects, we'll set a 1-day expiry.
 await adb.uploadProject(
     example_url, 
-    &quot;test-zircon-upload&quot;, 
+    &quot;test-js-upload&quot;, 
     &quot;my_test_version&quot;, 
     checksums, 
     contents, 
@@ -140,29 +140,27 @@ await adb.uploadProject(
 </code></pre>
 <p>A similar code chunk can be used to create new versions of an existing project, without downloading the existing contents.</p>
 <pre class="prettyprint source lang-js"><code>import * as hash from &quot;hash-wasm&quot;;
-let existing = getProjectMetadata(example_url, &quot;test-zircon-upload&quot;, { version: &quot;base&quot; });
+let existing = adb.getProjectMetadata(example_url, &quot;test-public&quot;, { version: &quot;base&quot; });
+let { metadata, links } = adb.prepareCloneUpload(existing);
 
-let contents = {};
+/* Possibly some modification of the 'contents' or 'links' here,
+ * as befitting a new version of the project. Typical modifications
+ * might include updating the metadata, adding or removing files,
+ * replacing the contents of certain files, and so on.
+ */
+
 let checksums = {};
-let links = {};
-for (const x of existing.metadata) {
-    if (x.path.endsWith(&quot;.json&quot;)) {
-        let basic = { ...x };
-        delete basic._extra;
-        contents[x.path] = JSON.stringify(basic);
-        checksums[x.path] = await hash.md5(contents[x.path]);
-    } else {
-        links[x.path] = x[&quot;_extra&quot;][&quot;id&quot;];
-    }
+for (const [k, v] of Object.entries(contents)) {
+    checksums[x.path] = await hash.md5(v);
 }
 
 // Initializing the upload, creating links where possible.
 await adb.uploadProject(
     example_url, 
-    &quot;test-zircon-upload&quot;, 
+    &quot;test-public&quot;, 
     &quot;my_test_version&quot;, 
     checksums, 
-    contents, 
+    metadata, 
     { initArgs: { dedupLinkPaths: links, expires: 1 } }
 );
 </code></pre>
@@ -189,7 +187,7 @@ Some suggestions are provided below:</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Wed Oct 12 2022 18:19:42 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Wed Oct 12 2022 21:54:22 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

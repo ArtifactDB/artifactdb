@@ -29,7 +29,7 @@
     
     <input type="text" id="nav-search" placeholder="Search" />
     
-    <h2><a href="index.html">Home</a></h2><h2><a href="https://code.roche.com/vida/artifactdb.js" target="_blank" class="menu-item" id="repository" >Code Repo</a></h2><h3>Classes</h3><ul><li><a href="HttpError.html">HttpError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#abortUpload">abortUpload</a></li><li><a href="global.html#completeUpload">completeUpload</a></li><li><a href="global.html#createUploadStartUrl">createUploadStartUrl</a></li><li><a href="global.html#extractByNameOrIndex">extractByNameOrIndex</a></li><li><a href="global.html#getFile">getFile</a></li><li><a href="global.html#getFileMetadata">getFileMetadata</a></li><li><a href="global.html#getPermissions">getPermissions</a></li><li><a href="global.html#getProjectMetadata">getProjectMetadata</a></li><li><a href="global.html#getProjectMetadataNext">getProjectMetadataNext</a></li><li><a href="global.html#globalRequestHeaders">globalRequestHeaders</a></li><li><a href="global.html#initializeUpload">initializeUpload</a></li><li><a href="global.html#listProjects">listProjects</a></li><li><a href="global.html#listProjectsNext">listProjectsNext</a></li><li><a href="global.html#listProjectVersions">listProjectVersions</a></li><li><a href="global.html#packId">packId</a></li><li><a href="global.html#parseLinkHeader">parseLinkHeader</a></li><li><a href="global.html#setPermissions">setPermissions</a></li><li><a href="global.html#unpackId">unpackId</a></li><li><a href="global.html#uploadFiles">uploadFiles</a></li><li><a href="global.html#uploadProject">uploadProject</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://code.roche.com/vida/artifactdb.js" target="_blank" class="menu-item" id="repository" >Code Repo</a></h2><h3>Classes</h3><ul><li><a href="HttpError.html">HttpError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#abortUpload">abortUpload</a></li><li><a href="global.html#completeUpload">completeUpload</a></li><li><a href="global.html#createUploadStartUrl">createUploadStartUrl</a></li><li><a href="global.html#extractByNameOrIndex">extractByNameOrIndex</a></li><li><a href="global.html#getFile">getFile</a></li><li><a href="global.html#getFileMetadata">getFileMetadata</a></li><li><a href="global.html#getPermissions">getPermissions</a></li><li><a href="global.html#getProjectMetadata">getProjectMetadata</a></li><li><a href="global.html#getProjectMetadataNext">getProjectMetadataNext</a></li><li><a href="global.html#globalRequestHeaders">globalRequestHeaders</a></li><li><a href="global.html#initializeUpload">initializeUpload</a></li><li><a href="global.html#listProjects">listProjects</a></li><li><a href="global.html#listProjectsNext">listProjectsNext</a></li><li><a href="global.html#listProjectVersions">listProjectVersions</a></li><li><a href="global.html#packId">packId</a></li><li><a href="global.html#parseLinkHeader">parseLinkHeader</a></li><li><a href="global.html#prepareCloneUpload">prepareCloneUpload</a></li><li><a href="global.html#setPermissions">setPermissions</a></li><li><a href="global.html#unpackId">unpackId</a></li><li><a href="global.html#uploadFiles">uploadFiles</a></li><li><a href="global.html#uploadProject">uploadProject</a></li></ul>
 </nav>
 
 <div id="main">
@@ -2540,7 +2540,7 @@ This should be one of <code>&quot;owners&quot;</code> or <code>&quot;none&quot;<
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="getProjectMetadata.js.html">getProjectMetadata.js</a>, <a href="getProjectMetadata.js.html#line27">line 27</a>
+        <a href="getProjectMetadata.js.html">getProjectMetadata.js</a>, <a href="getProjectMetadata.js.html#line28">line 28</a>
     </li></ul></dd>
     
 
@@ -2815,6 +2815,8 @@ If <code>null</code>, the constructed endpoint will return metadata for all vers
                 
 
                 
+                    &lt;nullable><br>
+                
 
                 
                 </td>
@@ -2823,13 +2825,14 @@ If <code>null</code>, the constructed endpoint will return metadata for all vers
             
                 <td class="default">
                 
-                    <code>50</code>
+                    <code>null</code>
                 
                 </td>
             
 
             <td class="description last"><p>Number of metadata entries to return in the first page.
-This may be interpreted by the API as a hint or as a maximum.</p></td>
+This may be interpreted by the API as a hint or as a maximum.
+If <code>null</code>, all metadata entries for this (version of the) project are returned, with no further pagination.</p></td>
         </tr>
 
     
@@ -2948,7 +2951,7 @@ If this is absent, it can be assumed that there are no further pages.</li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="getProjectMetadata.js.html">getProjectMetadata.js</a>, <a href="getProjectMetadata.js.html#line56">line 56</a>
+        <a href="getProjectMetadata.js.html">getProjectMetadata.js</a>, <a href="getProjectMetadata.js.html#line61">line 61</a>
     </li></ul></dd>
     
 
@@ -5224,6 +5227,299 @@ This should not contain <code>&quot;@&quot;</code>.</p></td>
 
     
 
+    <h4 class="name" id="prepareCloneUpload"><span class="type-signature"></span>prepareCloneUpload<span class="signature">(metadata, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="prepareCloneUpload.js.html">prepareCloneUpload.js</a>, <a href="prepareCloneUpload.js.html#line20">line 20</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>Prepare a clone of a project's version using its metadata.
+This enables lightweight creation of new project versions without downloading each file and re-uploading them.
+However, the same approach can be used to clone a project version under a completely different project name.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>metadata</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Array of objects containing the metadata for a particular version of a project, typically from <a href="global.html#getProjectMetadata"><code>getProjectMetadata</code></a>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Optional parameters.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>stringify</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>true</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether the metadata should be stringified in the return value.
+Setting this to <code>false</code> is useful when further modifications to the metadata are to be performed.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>An object containing:</p>
+<ul>
+<li><code>metadata</code>: object containing the JSON metadata for all files.
+Keys are the relative paths to the metadata files themselves (not the file artifacts), while values are the metadata objects for those files.
+This should used as <code>contents</code> in <a href="global.html#uploadProject"><code>uploadProject</code></a> or <a href="global.html#initializeUpload"><code>initializeUpload</code></a> (after stringification if <code>stringify = false</code>).</li>
+<li><code>links</code>: object containing the links to be created to the existing version of a project.
+Keys are the relative paths of the file artifacts to be linked from, while values are the ArtifactDB identifiers of the artifacts to be linked to.
+This should be used as <code>dedupLinkPaths</code> in <a href="global.html#uploadProject"><code>uploadProject</code></a> or <a href="global.html#initializeUpload"><code>initializeUpload</code></a>.</li>
+</ul>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="setPermissions"><span class="type-signature"></span>setPermissions<span class="signature">(baseUrl, project, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
@@ -6850,7 +7146,7 @@ See <a href="global.html#uploadFiles"><code>uploadFiles</code></a> for more deta
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Wed Oct 12 2022 18:19:42 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Wed Oct 12 2022 21:54:22 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
