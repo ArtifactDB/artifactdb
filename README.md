@@ -103,7 +103,7 @@ A similar code chunk can be used to create new versions of an existing project, 
 
 ```js
 import * as hash from "hash-wasm";
-let existing = getProjectMetadata(example_url, "test-zircon-upload", "base");
+let existing = getProjectMetadata(example_url, "test-zircon-upload", { version: "base" });
 
 let contents = {};
 let checksums = {};
@@ -129,3 +129,13 @@ await adb.uploadProject(
     { initArgs: { dedupLinkPaths: links, expires: 1 } }
 );
 ```
+
+## Using the file artifacts
+
+This package does not provide any functionality for parsing or creating the file artifacts.
+Rather, it is left to the application developer to choose a suitable framework for working with the files.
+Some suggestions are provided below:
+
+- [**papaparse**](https://www.npmjs.com/package/papaparse) and [**pako**](https://www.npmjs.com/package/pako) for reading Gzip-compressed CSV files.
+- [**h5wasm**](https://www.npmjs.com/package/h5wasm) for reading HDF5 files.
+- [**scran.js**](https://www.npmjs.com/package/scran.js) for loading array data into memory.
