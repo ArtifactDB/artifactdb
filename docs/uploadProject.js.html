@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>HttpError.js - Documentation</title>
+    <title>uploadProject.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">HttpError.js</h1>
+    <h1 class="page-title">uploadProject.js</h1>
     
 
     
@@ -44,28 +44,40 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Representation of a HTTP response error.
- * The error message is captured in `message` as usual, but the HTTP status code may also be retrieved via the `statusCode` property.
+            <pre class="prettyprint source linenums"><code>import * as up from "./uploadFiles.js";
+
+/**
+ * Upload a project's files to an ArtifactDB instance.
+ *
+ * @param {string} baseUrl - Base URL of the ArtifactDB REST API.
+ * @param {string} project - Name of the project.
+ * @param {string} version - Version to be uploaded.
+ * @param {Object} checksums - Object describing the to-be-uploaded files in the new project.
+ * Keys are the relative paths of the files inside the project, and values are their MD5 checksums.
+ * @param {Object} contents - Object where each entry corresponds to a file to be uploaded.
+ * Each key should be a relative path, and each value represents the contents of the file (typically a string or ArrayBuffer).
+ * See {@linkcode uploadFiles} for more details.
+ * @param {Object} [options={}] - Optional parameters.
+ * @param {Object} [options.initArgs={}] - Further arguments to pass to {@linkcode initializeUpload}.
+ * @param {Object} [options.uploadArgs={}] - Further arguments to pass to {@linkcode uploadFiles}.
+ * @param {Object} [options.completeArgs={}] - Further arguments to pass to {@linkcode completeUpload}.
+ * @param {Object} [options.abortArgs={}] - Further arguments to pass to {@linkcode abortUpload}.
+ *
+ * @return On success, a new version of the project is created on the ArtifactDB backend.
  */
-export class HttpError extends Error {
-    constructor(message, code) {
-        super(message);
-        this.statusCode = code;
+export async function uploadProject(baseUrl, project, version, checksums, contents, { initArgs = {}, uploadArgs = {}, completeArgs = {}, abortArgs = {} } = {}) {
+    let start_url = up.createUploadStartUrl(baseUrl, project, version);
+
+    let init = await up.initializeUpload(start_url, checksums, initArgs);
+    try {
+        await up.uploadFiles(baseUrl, init, contents, uploadArgs);
+        await up.completeUpload(baseUrl, init, completeArgs);
+    } catch (e) {
+        await up.abortUpload(baseUrl, init);
+        throw e;
     }
-}
 
-export async function checkHttpResponse(res, msg) {
-    if (res.ok) {
-        return;
-    }
-
-    let info = await res.json();
-    if (info.status == "error") {
-        throw new HttpError(msg + "; " + info.reason, res.status);
-    } 
-
-    throw new HttpError(msg, res.status);
+    return;
 }
 </code></pre>
         </article>
