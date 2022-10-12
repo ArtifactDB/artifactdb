@@ -10,8 +10,9 @@ import * as gh from "./globalRequestHeaders.js";
  * @param {object} [options={}] - Optional parameters.
  * @param {?string} [options.version=null] version - Version of interest.
  * If `null`, the constructed endpoint will return metadata for all versions of the project.
- * @param {number} [options.number=50] - Number of metadata entries to return in the first page.
+ * @param {?number} [options.number=null] - Number of metadata entries to return in the first page.
  * This may be interpreted by the API as a hint or as a maximum.
+ * If `null`, all metadata entries for this (version of the) project are returned, with no further pagination.
  * @param {?function} [options.getFun=null] - Function that accepts a single string containing a URL and returns a Response object (or a promise resolving to a Response).
  * Defaults to the in-built `fetch` function with the {@linkcode globalRequestHeaders}.
  *
@@ -24,12 +25,16 @@ import * as gh from "./globalRequestHeaders.js";
  *
  * @async
  */
-export async function getProjectMetadata(baseUrl, project, { version = null, number = 50, getFun = null } = {}) {
+export async function getProjectMetadata(baseUrl, project, { version = null, number = null, getFun = null } = {}) {
     let page_url = "/projects/" + encodeURIComponent(project);
     if (version !== null) {
         page_url += "/version/" + encodeURIComponent(version);
     }
     page_url += "/metadata";
+
+    if (number == null) {
+        number = Number.POSITIVE_INFINITY;
+    }
     return getProjectMetadataNext(baseUrl, page_url, { number: number, getFun: getFun });
 }
 
