@@ -33,7 +33,7 @@ import * as gp from "./getPermissions.js";
  * Nothing is returned.
  */
 export async function setPermissions(baseUrl, project, { isPublic = null, viewers = null, owners = null, action = "append", getFun = null, putFun = null } = {}) {
-    let perm_req = create_request(baseUrl, project, isPublic, viewers, owners, action, getFun);
+    let perm_req = await create_request(baseUrl, project, { isPublic: isPublic, viewers: viewers, owners: owners, action: action, getFun: getFun });
     let url = baseUrl + "/projects/" + encodeURIComponent(project) + "/permissions";
 
     if (putFun === null) {
@@ -41,7 +41,7 @@ export async function setPermissions(baseUrl, project, { isPublic = null, viewer
     }
 
     let res = await putFun(url, perm_req);
-    err.checkHttpResponse(res, "failed to set permissions for project '" + project + "'");
+    await err.checkHttpResponse(res, "failed to set permissions for project '" + project + "'");
 
     return;
 }

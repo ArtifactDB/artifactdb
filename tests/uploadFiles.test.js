@@ -1,20 +1,13 @@
 import * as adb from "../src/index.js";
-import { exampleUrl } from "./utils.js";
+import { exampleUrl, setupToken, wipeToken } from "./utils.js";
 import { contents } from "./mockUpload.js";
 import * as crypto from "crypto";
 import "isomorphic-fetch";
 
 const maybe = process.env.GITHUB_TOKEN ? test : test.skip;
 
-beforeAll(() => {
-    if (process.env.GITHUB_TOKEN) {
-        adb.globalRequestHeaders["Authorization"] = "Bearer " + process.env.GITHUB_TOKEN;
-    }
-});
-
-afterAll(() => {
-    delete adb.globalRequestHeaders["Authorization"];
-});
+beforeAll(setupToken);
+afterAll(wipeToken);
 
 maybe("basic uploads work correctly", async () => {
     let version = String(Date.now());

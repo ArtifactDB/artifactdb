@@ -2,6 +2,7 @@ export * from "./packId.js";
 export * from "./getFile.js";
 export * from "./getFileMetadata.js";
 export * from "./getPermissions.js";
+export * from "./setPermissions.js";
 export * from "./getProjectMetadata.js";
 export * from "./HttpError.js";
 export * from "./listProjects.js";
