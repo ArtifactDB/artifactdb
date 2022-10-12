@@ -60,44 +60,89 @@
 
     <section class="readme usertext">
         <article><h1>Javascript API for ArtifactDB</h1>
-<p>This package provides a bare-bones Javascript client for ArtifactDB instances.
-It defines a <code>Resource</code> base class to represent a single ArtifactDB resource, from which users can download metadata as well as the file itself.
-It is unlikely that developers will need to use this directly - unless, of course, they are creating an interface for a specific instance such as <strong>DataSetDB</strong> or <strong>ResultsDB</strong>.</p>
-<p>To install this package, fetch it from our internal <a href="http://npm.vida.science.roche.com">NPM registry</a>:</p>
-<pre class="prettyprint source lang-sh"><code># Set the registry
-npm config set registry http://npm.vida.science.roche.com
-
-# install the package
-npm i artifactdb.js
+<h2>Overview</h2>
+<p>This package implements a Javascript client for ArtifactDB instances, equivalent to the <a href="https://github.com/ArtifactDB/zircon-R"><strong>zircon</strong></a> client for R.
+It provides the usual helper functions to pull individual files and metadata, project-level information or permissions.
+It also provides methods to upload new versions to the ArtifactDB backend, given the appropriate authorization.
+The general aim is to enable the use of ArtifactDB in Javascript-based web applications, though the same code works in Node.js environments as well.</p>
+<h2>Quick start</h2>
+<p>Install this package from NPM:</p>
+<pre class="prettyprint source lang-sh"><code>npm install whoople
 </code></pre>
-<p>Interface developers should define a subclass of <code>Resource</code> for their specific ArtifactDB instance.
-This should include the <code>downloadFile</code> and <code>getMetadata</code> static methods to fetch data from the ArtifactDB REST API, possibly with caching and/or authentication.
-For example, for ResultsDB, we might use:</p>
-<pre class="prettyprint source lang-js"><code>import * as adb from &quot;artifactdb.js&quot;;
+<p>We'll use the test <a href="https://github.com/ArtifactDB/gypsum-worker"><strong>gypsum</strong></a> instance to run our examples.
+<strong>whoople</strong> uses ES6 syntax, so:</p>
+<pre class="prettyprint source lang-js"><code>import * as adb from &quot;whoople&quot;;
 
-class ResultResource extends adb.Resource {
-    constructor(project, path, id) {
-        super(project, path, id);
-    }
+let example_url = &quot;https://gypsum-test.aaron-lun.workers.dev&quot;;
 
-    // Omitting error checks for simplicity here.
-    static getMetadata(id) {
-        let res = await fetch(&quot;https://resultsdb.genomics.roche.com/v3/&quot; + encodeURIComponent(id) + &quot;/metadata&quot;);
-        return res.json(); 
-    }
+// Fetch metadata for a file:
+let meta = await adb.getFileMetadata(example_url, &quot;test-zircon-upload:blah.txt@base&quot;);
 
-    static downloadFile(id, { forceBuffer = false } = {}) {
-        let res = await fetch(&quot;https://resultsdb.genomics.roche.com/v3/&quot; + encodeURIComponent(id));
-        return res.arrayBuffer(); 
-    }
+// Fetch the file contents (defaulting to ArrayBuffer):
+let contents = await adb.getFile(example_url, &quot;test-zircon-upload:blah.txt@base&quot;);
+
+// Fetch all files for a given project's version:
+let project_meta = await adb.getProjectMetadata(example_url, &quot;test-zircon-upload&quot;, { version: &quot;base&quot; });
+
+// See the project permissions:
+let project_perm = await adb.getPermissions(example_url, &quot;test-zircon-upload&quot;);
+
+// List available versions:
+let project_versions = await adb.listProjectVersions(example_url, &quot;test-zircon-upload&quot;);
+</code></pre>
+<p>Check out the <a href="https://artifactdb.github.io/whoople">reference documentation</a> for more details.</p>
+<h2>Using a different request function</h2>
+<p>By default, we use the web API's <code>fetch()</code> to do all requests.
+Users can adjust the <code>globalRequestHeaders</code> to add headers to each request, typically for authentication:</p>
+<pre class="prettyprint source lang-js"><code>adb.globalRequestHeaders[&quot;Authorization&quot;] = &quot;Bearer &quot; + token;
+
+// Now we can access non-public resources for the user's token:
+let contents = await adb.getFile(example_url, some_non_public_file);
+</code></pre>
+<p>Users can also override the request function directly by supplying their own function that returns a <code>Response</code> object.
+This may be useful for older versions of Node.js where the <code>fetch()</code> function may not be available (and a polyfill is not appropriate, for whatever reason).</p>
+<pre class="prettyprint source lang-js"><code>import * as https from &quot;https&quot;;
+
+async function newGet(url) {
+    /* Some implementation based on https.get() */
 }
+
+let contents = await adb.getFile(example_url, some_non_public_file, { getFun: newGet });
 </code></pre>
-<p>Application developers can then do something like:</p>
-<pre class="prettyprint source lang-js"><code>let res = new ResultResource(&quot;GPA2&quot;, &quot;voom-results/all.results-1&quot;, &quot;PUBLISHED-5&quot;);
-let meta = await res.metadata;
-let contents = await res.download();
+<h2>Uploading to ArtifactDB</h2>
+<p>Authorized users can also upload projects to ArtifactDB.</p>
+<pre class="prettyprint source lang-js"><code>// File artifacts we want to create, and their MD5 sums.
+let paths = {
+    &quot;foo&quot;: &quot;bf02365058a31ab56009204911985eff&quot;,
+    &quot;foo.json&quot;: &quot;c202012c79bba039666e0935ef3b1e3b&quot;,
+    &quot;bar.txt&quot;: &quot;ea5683e1344a7d7be76cceda6a9d5d4a&quot;,
+    &quot;bar.txt.json&quot;: &quot;5e2008e26a1238b26a6d3b76b455684f&quot;,
+    &quot;whee/stuff.csv.gz&quot;: &quot;a20def5b0ed444dad00b4d0479ff0ab3&quot;,
+    &quot;whee/stuff.csv.gz.json&quot;: &quot;8894609bceb4f67cd98f25dd577ea37f&quot;
+};
+
+// Initializing the upload.
+let init = adb.initializeUpload(example_url, &quot;test-zircon-upload&quot;, &quot;my_test_version&quot;, paths, { expires: 1 });
+
+// Uploading the files.
+let contents = {
+    &quot;foo&quot;: &quot;&lt;CONTENTS AS A STRING OR ARRAYBUFFER>&quot;,
+    &quot;foo.json&quot;: &quot;&lt;CONTENTS AS A STRING OR ARRAYBUFFER>&quot;,
+    &quot;bar.txt&quot;: &quot;&lt;CONTENTS AS A STRING OR ARRAYBUFFER>&quot;,
+    &quot;bar.txt.json&quot;: &quot;&lt;CONTENTS AS A STRING OR ARRAYBUFFER>&quot;,
+    &quot;whee/stuff.csv.gz&quot;: &quot;&lt;CONTENTS AS A STRING OR ARRAYBUFFER>&quot;,
+    &quot;whee/stuff.csv.gz.json&quot;: &quot;&lt;CONTENTS AS A STRING OR ARRAYBUFFER>&quot;
+};
+await adb.uploadFiles(example_url, init, contents);
+
+// Completing the upload.
+await adb.completeUpload(example_url, init);
 </code></pre>
-<p>Check out the <a href="https://vida.pages.roche.com/artifactdb.js">reference documentation</a> for more details.</p></article>
+<p>The same code can be used to create new versions of an existing project.
+In such cases, it is possible to use the output of <code>getProjectMetadata()</code> to identify the existing files in the latest version of the project,
+and then pass them to <code>initializeUpload()</code> via the <code>dedupLinkPaths</code> argument.
+This instructs the backend to create a link without an unnecessary roundtrip of pulling down and re-uploading that file's contents;
+only the modified files need to be specified in <code>paths</code>.</p></article>
     </section>
 
 
@@ -112,7 +157,7 @@ let contents = await res.download();
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Tue Oct 11 2022 16:48:53 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Wed Oct 12 2022 00:29:49 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
