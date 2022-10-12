@@ -22,3 +22,4 @@ main
 browser
 TEST-CACHE
 secrets.sh
+*.crt

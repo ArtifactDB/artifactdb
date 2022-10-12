@@ -54,21 +54,20 @@ describe("setPermissions works correctly", () => {
     maybe("setPermissions works correctly", async () => {
         let exampleProject = "test-js-upload";
 
-        // Unfortunately, we can't test it easily, because the values 
-        // are cached somewhere and it doesn't propagate predictably.
-        // So we'll just make sure it runs without errors, at least.
-        await adb.setPermissions(exampleUrl, exampleProject, { isPublic: false, viewers: [ "lawremi" ], action: "remove" });
+        await adb.setPermissions(exampleUrl, exampleProject, { isPublic: true, viewers: [ "lawremi" ] });
+        await (new Promise(resolve => setTimeout(resolve, 3000))); // wait a bit for the change to occur in the file store.
+        let res = await fetch(exampleUrl + "/projects/" + exampleProject + "/permissions?force_reload=true", { headers: adb.globalRequestHeaders }); // force a reload of the cache.
+        expect(res.ok).toBe(true);
+        let perms = await res.json();
+        expect(perms.read_access).toBe("public");
+        expect(perms.viewers).toEqual([ "lawremi" ]);
 
-//        await adb.setPermissions(exampleUrl, exampleProject, { isPublic: true, viewers: [ "lawremi" ] });
-//        await (new Promise(resolve => setTimeout(resolve, 3000))); // wait a bit for the change to occur.
-//        perms = await adb.getPermissions(exampleUrl, exampleProject);
-//        expect(perms.read_access).toBe("public");
-//        expect(perms.viewers).toEqual([ "lawremi" ]);
-//
-//        await adb.setPermissions(exampleUrl, exampleProject, { isPublic: false, viewers: [ "lawremi" ], action: "remove" });
-//        await (new Promise(resolve => setTimeout(resolve, 3000))); // wait a bit for the change to occur.
-//        perms = await adb.getPermissions(exampleUrl, exampleProject, { getFun: getFun });
-//        expect(perms.read_access).toBe("viewers");
-//        expect(perms.viewers).toEqual([]);
+        await adb.setPermissions(exampleUrl, exampleProject, { isPublic: false, viewers: [ "lawremi" ], action: "remove" });
+        await (new Promise(resolve => setTimeout(resolve, 3000))); // wait a bit for the change to occur.
+        res = await fetch(exampleUrl + "/projects/" + exampleProject + "/permissions?force_reload=true", { headers: adb.globalRequestHeaders });
+        expect(res.ok).toBe(true);
+        perms = await res.json();
+        expect(perms.read_access).toBe("viewers");
+        expect(perms.viewers).toEqual([]);
     });
 })
