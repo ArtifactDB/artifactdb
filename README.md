@@ -103,29 +103,27 @@ A similar code chunk can be used to create new versions of an existing project, 
 
 ```js
 import * as hash from "hash-wasm";
-let existing = getProjectMetadata(example_url, "test-zircon-upload", { version: "base" });
+let existing = adb.getProjectMetadata(example_url, "test-public", { version: "base" });
+let { metadata, links } = adb.prepareCloneUpload(existing);
 
-let contents = {};
+/* Possibly some modification of the 'contents' or 'links' here,
+ * as befitting a new version of the project. Typical modifications
+ * might include updating the metadata, adding or removing files,
+ * replacing the contents of certain files, and so on.
+ */
+
 let checksums = {};
-let links = {};
-for (const x of existing.metadata) {
-    if (x.path.endsWith(".json")) {
-        let basic = { ...x };
-        delete basic._extra;
-        contents[x.path] = JSON.stringify(basic);
-        checksums[x.path] = await hash.md5(contents[x.path]);
-    } else {
-        links[x.path] = x["_extra"]["id"];
-    }
+for (const [k, v] of Object.entries(contents)) {
+    checksums[x.path] = await hash.md5(v);
 }
 
 // Initializing the upload, creating links where possible.
 await adb.uploadProject(
     example_url, 
-    "test-zircon-upload", 
+    "test-public", 
     "my_test_version", 
     checksums, 
-    contents, 
+    metadata, 
     { initArgs: { dedupLinkPaths: links, expires: 1 } }
 );
 ```
