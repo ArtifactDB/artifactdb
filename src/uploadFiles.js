@@ -5,18 +5,18 @@ import * as gh from "./globalRequestHeaders.js";
  * Start an upload of a new version of a project.
  *
  * @param {string} startUrl - Full URL to the endpoint to create a new project, see {@linkcode createUploadStartUrl}.
- * @param {Object} paths - Object containing the paths of the to-be-uploaded files in the new project.
- * Keys are the paths and values are their MD5 checksums.
+ * @param {Object} checksums - Object describing the to-be-uploaded files in the new project.
+ * Keys are the relative paths of the files inside the project, and values are their MD5 checksums.
  * @param {object} [options={}] - Optional parameters.
- * @param {boolean} [options.autoDedupMd5=true] - Whether to perform automatic deduplication of files in `paths` based on matching MD5 checksums to files of the same name in a previous version of the project.
+ * @param {boolean} [options.autoDedupMd5=true] - Whether to perform automatic deduplication of files in `checksums` based on matching MD5 checksums to files of the same name in a previous version of the project.
  * @param {string} [options.md5Field="md5sum"] - Field in the metadata containing the MD5 checksum for the file.
  * Only used for MD5-based deduplication.
- * @param {Object} [options.dedupMd5Paths={}] - Object containing the paths of the files to use in MD5-based deduplication.
- * Like `paths`, keys are the paths and values are their MD5 checksums; however, the keys should not have any overlap with those in `paths`.
+ * @param {Object} [options.dedupMd5Paths={}] - Object specifying the files to use in MD5-based deduplication.
+ * Like `checksums`, keys are the relative paths and values are their MD5 checksums; however, the keys should not have any overlap with those in `checksums`.
  * `dedupMd5Paths` is a more explicit approach to listing files that are to be deduplicated, e.g., if only a subset of files are to be deduplicated.
- * @param {Object} [options.dedupLinkPaths={}] - Object containing the paths of the files to use in link-based deduplication.
- * Keys are the paths and values are the ArtifactDB identifiers to be linked to.
- * Keys in this object should not have any overlap with those in `paths`.
+ * @param {Object} [options.dedupLinkPaths={}] - Object specifying files to use in link-based deduplication.
+ * Keys are the relative paths and values are the ArtifactDB identifiers to be linked to.
+ * Keys in this object should not have any overlap with those in `checksums` or `dedupMd5Paths`.
  * @param {?function} [options.postFun=null] - Function that performs a POST request and returns a Response object.
  * It should accept:
  *
@@ -37,11 +37,11 @@ import * as gh from "./globalRequestHeaders.js";
  * These are primarily used by passing the entire object to {@linkcode uploadFiles}, {@linkcode completeUpload} or {@linkcode abortUpload}.
  * @async
  */
-export async function initializeUpload(startUrl, paths, { autoDedupMd5 = true, md5Field = "md5sum", dedupMd5Paths = {}, dedupLinkPaths = {}, postFun = null, expires = null } = {}) {
+export async function initializeUpload(startUrl, checksums, { autoDedupMd5 = true, md5Field = "md5sum", dedupMd5Paths = {}, dedupLinkPaths = {}, postFun = null, expires = null } = {}) {
     let filenames = [];
     let sofar = new Set;
 
-    for (const [k, v] of Object.entries(paths)) {
+    for (const [k, v] of Object.entries(checksums)) {
         let payload = { filename: k, value: { md5sum: v } };
         if (autoDedupMd5 && !k.endsWith(".json")) {
             payload.check = "md5";
@@ -119,9 +119,10 @@ export function createUploadStartUrl(baseUrl, project, version) {
  *
  * @param {string} baseUrl - Base URL of the ArtifactDB REST API.
  * @param {Object} initial - Object returned by {@linkcode initializeUpload}.
- * @param {Object} contents - Object where keys are a superset of the paths used in `paths` and `dedupMd5Paths`,
- * and values are any payload that can be understood by `presignedPutFun`.
- * By default, this is anything that can be uploaded by `fetch`, most typically a string or ArrayBuffer.
+ * @param {Object} contents - Object where each entry corresponds to a file to be uploaded.
+ * Each key should be a relative path, and the object should contain a superset of the keys used in `checksums` and `dedupMd5Paths` of {@linkcode initializeUpload}.
+ * Each value represents the contents of the file and can be anything that is understood by `presignedPutFun`.
+ * For the default function, this is anything that can be uploaded by `fetch`, most typically a string or ArrayBuffer.
  * @param {Object} [options={}] - Optional parameters.
  * @param {?function} [options.putFun=null] - Function that performs a PUT request without any body, given the URL as a single argument, and returns a Response object.
  * If `null`, it defaults to `fetch` with the {@linkcode globalRequestHeaders}.
@@ -132,7 +133,7 @@ export function createUploadStartUrl(baseUrl, project, version) {
  *   This can be inspected to determine an appropriate `Content-Type` header.
  * - `url`: String containing the presigned URL.
  * - `md5`: String containing the base64-encoded MD5 checksum for this file.
- * - `value`: The file contents, typically a string or ArrayBuffer.
+ * - `value`: The file contents from `contents`.
  *
  * If `null`, it defaults to `fetch` with the {@linkcode globalRequestHeaders}.
  *

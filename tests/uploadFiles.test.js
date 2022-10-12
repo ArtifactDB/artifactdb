@@ -19,7 +19,6 @@ afterAll(() => {
 maybe("basic uploads work correctly", async () => {
     let version = String(Date.now());
     let startUrl = adb.createUploadStartUrl(exampleUrl, "test-js-upload", version);
-    adb.globalRequestHeaders["Authorization"] = "Bearer " + process.env.GITHUB_TOKEN;
 
     let paths = {};
     for (const [k, v] of Object.entries(contents)) {
@@ -47,7 +46,6 @@ maybe("basic uploads work correctly", async () => {
 maybe("MD5-based uploads work correctly", async () => {
     let version = String(Date.now());
     let startUrl = adb.createUploadStartUrl(exampleUrl, "test-js-upload", version);
-    adb.globalRequestHeaders["Authorization"] = "Bearer " + process.env.GITHUB_TOKEN;
 
     let paths = {};
     let dedupable = {};
@@ -85,7 +83,6 @@ maybe("MD5-based uploads work correctly", async () => {
 maybe("link-based uploads work correctly", async () => {
     let version = String(Date.now());
     let startUrl = adb.createUploadStartUrl(exampleUrl, "test-js-upload", version);
-    adb.globalRequestHeaders["Authorization"] = "Bearer " + process.env.GITHUB_TOKEN;
 
     let paths = {};
     let dedupable = {};
@@ -116,3 +113,17 @@ maybe("link-based uploads work correctly", async () => {
     expect(meta["_extra"].link.artifactdb).toBe("test-js-upload:Jayaram.txt@base"); 
 })
 
+maybe("upload wrapper works correctly", async () => {
+    let paths = {};
+    for (const [k, v] of Object.entries(contents)) {
+        paths[k] = crypto.createHash("md5").update(v).digest("hex");
+    }
+
+    let version = String(Date.now());
+    await adb.uploadProject(baseUrl, "test-js-upload", version, { initArgs: { expires: 1 } });
+
+    // Checking the results.
+    let stuff = await adb.getFile(exampleUrl, adb.packId("test-js-upload", "Sebastien.txt", version));
+    const dec = new TextDecoder;
+    expect(dec.decode(stuff)).toBe("Je suis une pizza.");
+})

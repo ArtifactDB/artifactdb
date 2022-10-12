@@ -88,11 +88,15 @@ for (const [k, v] of Object.entries(contents)) {
     checksums[k] = await hash.md5(v);
 }
 
-// Performing the upload.
-let start_url = adb.createUploadStartUrl(example_url, "test-zircon-upload", "my_test_version");
-let init = adb.initializeUpload(start_url, checksums, { expires: 1 });
-await adb.uploadFiles(example_url, init, contents);
-await adb.completeUpload(example_url, init);
+// Performing the upload. For test projects, we'll set a 1-day expiry.
+await adb.uploadProject(
+    example_url, 
+    "test-zircon-upload", 
+    "my_test_version", 
+    checksums, 
+    contents, 
+    { initArgs: { expires: 1 } }
+);
 ```
 
 A similar code chunk can be used to create new versions of an existing project, without downloading the existing contents.
@@ -115,9 +119,13 @@ for (const x of existing.metadata) {
     }
 }
 
-// Initializing the upload.
-let start_url = adb.createUploadStartUrl(example_url, "test-zircon-upload", "my_linked_version");
-let init = adb.initializeUpload(start_url, checksums, { dedupLinkPaths: links, expires: 1 });
-await adb.uploadFiles(example_url, init, contents);
-await adb.completeUpload(example_url, init);
+// Initializing the upload, creating links where possible.
+await adb.uploadProject(
+    example_url, 
+    "test-zircon-upload", 
+    "my_test_version", 
+    checksums, 
+    contents, 
+    { initArgs: { dedupLinkPaths: links, expires: 1 } }
+);
 ```
