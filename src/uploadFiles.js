@@ -1,4 +1,5 @@
 import * as err from "./HttpError.js";
+import * as gh from "./globalRequestHeaders.js";
 
 /**
  * Start an upload of a new version of a project.
@@ -41,10 +42,10 @@ export async function initializeUpload(startUrl, paths, { autoDedupMd5 = true, m
     let sofar = new Set;
 
     for (const [k, v] of Object.entries(paths)) {
-        let payload = { filename: k, values: { md5sum: v } };
+        let payload = { filename: k, value: { md5sum: v } };
         if (autoDedupMd5 && !k.endsWith(".json")) {
             payload.check = "md5";
-            payload.field = md5Field;
+            payload.value.field = md5Field;
         } else {
             payload.check = "simple";
         }
@@ -56,7 +57,10 @@ export async function initializeUpload(startUrl, paths, { autoDedupMd5 = true, m
         if (sofar.has(k)) {
             throw new Error("multiple occurrences of path '" + k + "'");
         }
-        filenames.push({ filename: k, check: "md5", values: { md5sum: v, field: md5Field } });
+        if (k.endsWith(".json")) {
+            throw new Error("cannot deduplicate JSON file '" + k + "'");
+        }
+        filenames.push({ filename: k, check: "md5", value: { md5sum: v, field: md5Field } });
         sofar.add(k);
     }
 
@@ -64,7 +68,10 @@ export async function initializeUpload(startUrl, paths, { autoDedupMd5 = true, m
         if (sofar.has(k)) {
             throw new Error("multiple occurrences of path '" + k + "'");
         }
-        filenames.push({ filename: k, check: "link", values: { artifactdb_id: v } });
+        if (k.endsWith(".json")) {
+            throw new Error("cannot deduplicate JSON file '" + k + "'");
+        }
+        filenames.push({ filename: k, check: "link", value: { artifactdb_id: v } });
     }
 
     let req = { 
@@ -84,13 +91,13 @@ export async function initializeUpload(startUrl, paths, { autoDedupMd5 = true, m
                     "Content-Type": "application/json",
                     ...gh.globalRequestHeaders
                 },
-                body: JSON.stringify(body);
+                body: JSON.stringify(body)
             });
         };
     }
 
     let res = await postFun(startUrl, req);
-    await err.checkErrorResponse(res, "failed to start a project upload");
+    await err.checkHttpResponse(res, "failed to start a project upload");
     return await res.json();
 }
 
@@ -155,17 +162,17 @@ export async function uploadFiles(baseUrl, initial, contents, { putFun = null, p
                 method: "PUT",
                 headers: {
                     // Don't use global headers here! Presigned URLs don't like auth.
-                    "Content-Type": (paths.endsWith(".json") ? "application/json" : "application/octet-stream"),
+                    "Content-Type": (path.endsWith(".json") ? "application/json" : "application/octet-stream"),
                     "Content-Md5": md5sum 
                 },
                 body: value
-            };
+            });
         };
     }
 
     {
         let promises = [];
-        for (const x of initials.presigned_urls) {
+        for (const x of initial.presigned_urls) {
             if (!(x.filename in contents)) {
                 throw new Error("failed to find path '" + x.filename + "' in contents");
             }
@@ -175,7 +182,13 @@ export async function uploadFiles(baseUrl, initial, contents, { putFun = null, p
         await Promise.all(promises);
         let responses = await Promise.all(promises);
         for (var i = 0; i < responses.length; i++) {
-            await err.checkHttpResponse(responses[i], "failed to upload to presigned URL for path '" + initial.presigned_urls[i].filename + "'");
+            let res = responses[i];
+            if (res.ok) {
+                continue;
+            }
+
+            let txt = await res.text();
+            throw new Error("failed to upload to presigned URL for path '" + initial.presigned_urls[i].filename + "': " + txt);
         }
     }
 
@@ -190,10 +203,14 @@ export async function uploadFiles(baseUrl, initial, contents, { putFun = null, p
  * @param {number} [options.indexWait=600] - Number of seconds to wait for indexing to complete/fail before returning.
  * @param {boolean} [options.isPublic=true] - Whether to make the project publicly visible.
  * This only has an effect for new projects without any prior versions.
- * @param {Array} [options.viewers=[]] - Array of strings containing the user names of the viewers.
+ * @param {?Array} [options.viewers=null] - Array of strings containing the user names of the viewers.
  * This only has an effect for new projects without any prior versions.
- * @param {Array} [options.owners=[]] - Array of strings containing the user names of the owners.
+ * Defaults to an empty list.
+ * @param {Array} [options.owners=null] - Array of strings containing the user names of the owners.
  * This only has an effect for new projects without any prior versions.
+ * Default depends on the instance policy, usually set to the uploading user.
+ * @param {?function} [options.getFun=null] - Function that accepts a single string containing a URL and returns a Response object.
+ * Defaults to the in-built `fetch` function with {@linkcode globalRequestHeaders}.
  * @param {?function} [options.putFun=null] - Function that performs a PUT request and returns a Response object.
  * It should accept:
  *
@@ -210,11 +227,18 @@ export async function uploadFiles(baseUrl, initial, contents, { putFun = null, p
  *
  * @async
  */
-export async function completeUpload(baseUrl, initial, { indexWait = 600, isPublic = true, viewers = [], owners = [], putFun = null } = {}) {
+export async function completeUpload(baseUrl, initial, { indexWait = 600, isPublic = true, viewers = null, owners = null, getFun = null, putFun = null } = {}) {
     if (putFun === null) {
         putFun = gh.quickPutJson;
     }
 
+    let permissions = { read_access: (isPublic ? "public" : "viewers") };
+    if (owners !== null) {
+        permissions.owners = owners;
+    }
+    if (viewers !== null) {
+        permissions.viewers = viewers;
+    }
     let url = baseUrl + initial.completion_url;
     let res = await putFun(url, permissions);
     await err.checkHttpResponse(res, "failed to complete the project upload");
@@ -230,9 +254,9 @@ export async function completeUpload(baseUrl, initial, { indexWait = 600, isPubl
     while (Date.now() - start < indexWait * 1000) {
         await (new Promise(resolve => setTimeout(resolve(null), 5000))); // wait for 5 seconds.
 
-        let status_url = baseUrl + "/jobs/" + job_str);
+        let status_url = baseUrl + "/jobs/" + job_str;
         let res = await getFun(status_url);
-        err.CheckHttpResponse(res, "failed to query status for job " + job_str);
+        err.checkHttpResponse(res, "failed to query status for job " + job_str);
         let state = await res.json();
 
         if (state.status == "SUCCESS") {
