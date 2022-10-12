@@ -18,7 +18,7 @@ test("adding or removing users works correctly", () => {
 })
 
 test("request construction works correctly", async () => {
-    let exampleProject = "test-zircon-upload";
+    let exampleProject = "test-public";
 
     {
         let out = await setperm.create_request(exampleUrl, exampleProject, { isPublic: false });

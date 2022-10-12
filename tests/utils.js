@@ -1,6 +1,6 @@
 import * as adb from "../src/index.js";
 
-export const exampleId = "test-zircon-upload:blah.txt@base";
+export const exampleId = "test-public:blah.txt@base";
 export const exampleUrl = "https://gypsum-test.aaron-lun.workers.dev";
 
 export function setupToken() {

@@ -24,19 +24,19 @@ import * as adb from "artifactdb";
 let example_url = "https://gypsum-test.aaron-lun.workers.dev";
 
 // Fetch metadata for a file:
-let meta = await adb.getFileMetadata(example_url, "test-zircon-upload:blah.txt@base");
+let meta = await adb.getFileMetadata(example_url, "test-public:blah.txt@base");
 
 // Fetch the file contents (defaulting to ArrayBuffer):
-let contents = await adb.getFile(example_url, "test-zircon-upload:blah.txt@base");
+let contents = await adb.getFile(example_url, "test-public:blah.txt@base");
 
 // Fetch all files for a given project's version:
-let project_meta = await adb.getProjectMetadata(example_url, "test-zircon-upload", { version: "base" });
+let project_meta = await adb.getProjectMetadata(example_url, "test-public", { version: "base" });
 
 // See the project permissions:
-let project_perm = await adb.getPermissions(example_url, "test-zircon-upload");
+let project_perm = await adb.getPermissions(example_url, "test-public");
 
 // List available versions:
-let project_versions = await adb.listProjectVersions(example_url, "test-zircon-upload");
+let project_versions = await adb.listProjectVersions(example_url, "test-public");
 ```
 
 Check out the [reference documentation](https://artifactdb.github.io/artifactdb) for more details.
@@ -91,7 +91,7 @@ for (const [k, v] of Object.entries(contents)) {
 // Performing the upload. For test projects, we'll set a 1-day expiry.
 await adb.uploadProject(
     example_url, 
-    "test-zircon-upload", 
+    "test-js-upload", 
     "my_test_version", 
     checksums, 
     contents, 

@@ -12,11 +12,11 @@ test("getFileMetadata works correctly", async () => {
 })
 
 test("getFileMetadata follows links correctly", async () => {
-    let contents = await adb.getFileMetadata(exampleUrl, "test-zircon-link:redirect@base");
+    let contents = await adb.getFileMetadata(exampleUrl, "test-links:redirect@public");
     expect(contents.path).toBe("foo/bar.txt");
     expect(contents["$schema"]).toMatch("generic_file/");
 
-    let contents2 = await adb.getFileMetadata(exampleUrl, "test-zircon-link:redirect@base", { followLink: false });
+    let contents2 = await adb.getFileMetadata(exampleUrl, "test-links:redirect@public", { followLink: false });
     expect(contents2["$schema"]).toMatch("redirection/");
 })
 
