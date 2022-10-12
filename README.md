@@ -71,36 +71,61 @@ let contents = await adb.getFile(example_url, some_non_public_file, { getFun: ne
 Authorized users can also upload projects to ArtifactDB.
 
 ```js
-// File artifacts we want to create, and their MD5 sums.
-let paths = {
-    "foo": "bf02365058a31ab56009204911985eff",
-    "foo.json": "c202012c79bba039666e0935ef3b1e3b",
-    "bar.txt": "ea5683e1344a7d7be76cceda6a9d5d4a",
-    "bar.txt.json": "5e2008e26a1238b26a6d3b76b455684f",
-    "whee/stuff.csv.gz": "a20def5b0ed444dad00b4d0479ff0ab3",
-    "whee/stuff.csv.gz.json": "8894609bceb4f67cd98f25dd577ea37f"
-};
-
-// Initializing the upload.
-let init = adb.initializeUpload(example_url, "test-zircon-upload", "my_test_version", paths, { expires: 1 });
-
-// Uploading the files.
+// Defining the files inside our project.
 let contents = {
     "foo": "<CONTENTS AS A STRING OR ARRAYBUFFER>",
-    "foo.json": "<CONTENTS AS A STRING OR ARRAYBUFFER>",
+    "foo.json": "<JSON METADATA AS A STRING OR ARRAYBUFFER>",
     "bar.txt": "<CONTENTS AS A STRING OR ARRAYBUFFER>",
-    "bar.txt.json": "<CONTENTS AS A STRING OR ARRAYBUFFER>",
+    "bar.txt.json": "<JSON METADATA AS A STRING OR ARRAYBUFFER>",
     "whee/stuff.csv.gz": "<CONTENTS AS A STRING OR ARRAYBUFFER>",
-    "whee/stuff.csv.gz.json": "<CONTENTS AS A STRING OR ARRAYBUFFER>"
+    "whee/stuff.csv.gz.json": "<JSON METADATA AS A STRING OR ARRAYBUFFER>"
 };
-await adb.uploadFiles(example_url, init, contents);
 
-// Completing the upload.
-await adb.completeUpload(example_url, init);
+// Computing their checksums.
+import * as hash from "hash-wasm";
+let checksums = {};
+for (const [k, v] of Object.entries(contents)) {
+    checksums[k] = await hash.md5(v);
+}
+
+// Performing the upload. For test projects, we'll set a 1-day expiry.
+await adb.uploadProject(
+    example_url, 
+    "test-zircon-upload", 
+    "my_test_version", 
+    checksums, 
+    contents, 
+    { initArgs: { expires: 1 } }
+);
 ```
 
-The same code can be used to create new versions of an existing project.
-In such cases, it is possible to use the output of `getProjectMetadata()` to identify the existing files in the latest version of the project,
-and then pass them to `initializeUpload()` via the `dedupLinkPaths` argument.
-This instructs the backend to create a link without an unnecessary roundtrip of pulling down and re-uploading that file's contents;
-only the modified files need to be specified in `paths`.
+A similar code chunk can be used to create new versions of an existing project, without downloading the existing contents.
+
+```js
+import * as hash from "hash-wasm";
+let existing = getProjectMetadata(example_url, "test-zircon-upload", "base");
+
+let contents = {};
+let checksums = {};
+let links = {};
+for (const x of existing.metadata) {
+    if (x.path.endsWith(".json")) {
+        let basic = { ...x };
+        delete basic._extra;
+        contents[x.path] = JSON.stringify(basic);
+        checksums[x.path] = await hash.md5(contents[x.path]);
+    } else {
+        links[x.path] = x["_extra"]["id"];
+    }
+}
+
+// Initializing the upload, creating links where possible.
+await adb.uploadProject(
+    example_url, 
+    "test-zircon-upload", 
+    "my_test_version", 
+    checksums, 
+    contents, 
+    { initArgs: { dedupLinkPaths: links, expires: 1 } }
+);
+```

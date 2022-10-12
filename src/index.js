@@ -9,3 +9,6 @@ export * from "./listProjectVersions.js";
 export * from "./packId.js";
 export * from "./parseLinkHeader.js";
 export * from "./extractByNameOrIndex.js";
+export * from "./uploadFiles.js";
+export * from "./uploadProject.js";
+export * from "./globalRequestHeaders.js";
