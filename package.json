@@ -1,5 +1,5 @@
 {
-  "name": "whoople",
+  "name": "artifactdb",
   "version": "0.1.0",
   "description": "Javascript client for working with the ArtifactDB REST API.",
   "author": {
@@ -19,7 +19,7 @@
     "jest": "^27.4.7",
     "jsdoc": "^3.6.10"
   },
-  "repository": "https://github.com/ArtifactDB/whoople",
-  "homepage": "https://github.com/ArtifactDB/whoople",
-  "bugs": "https://github.com/ArtifactDB/whoople/issues"
+  "repository": "https://github.com/ArtifactDB/artifactdb",
+  "homepage": "https://github.com/ArtifactDB/artifactdb",
+  "bugs": "https://github.com/ArtifactDB/artifactdb/issues"
 }

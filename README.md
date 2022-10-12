@@ -9,17 +9,17 @@ The general aim is to enable the use of ArtifactDB in Javascript-based web appli
 
 ## Quick start
 
-Install this package from NPM:
+Install this package from [`npm`](https://www.npmjs.com/package/artifactdb) via the usual methods.
 
 ```sh
-npm install whoople
+npm install artifactdb
 ```
 
 We'll use the test [**gypsum**](https://github.com/ArtifactDB/gypsum-worker) instance to run our examples.
-**whoople** uses ES6 syntax, so:
+**artifactdb** uses ES6 syntax, so:
 
 ```js
-import * as adb from "whoople";
+import * as adb from "artifactdb";
 
 let example_url = "https://gypsum-test.aaron-lun.workers.dev";
 
@@ -39,7 +39,7 @@ let project_perm = await adb.getPermissions(example_url, "test-zircon-upload");
 let project_versions = await adb.listProjectVersions(example_url, "test-zircon-upload");
 ```
 
-Check out the [reference documentation](https://artifactdb.github.io/whoople) for more details.
+Check out the [reference documentation](https://artifactdb.github.io/artifactdb) for more details.
 
 ## Using a different request function
 
