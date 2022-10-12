@@ -19,7 +19,7 @@
     "jest": "^27.4.7",
     "jsdoc": "^3.6.10"
   },
-  "repository": "https://github.com/ArtifactDB/artifactdb",
-  "homepage": "https://github.com/ArtifactDB/artifactdb",
-  "bugs": "https://github.com/ArtifactDB/artifactdb/issues"
+  "repository": "https://github.com/ArtifactDB/artifactdb.js",
+  "homepage": "https://github.com/ArtifactDB/artifactdb.js",
+  "bugs": "https://github.com/ArtifactDB/artifactdb.js/issues"
 }
