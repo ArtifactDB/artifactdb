@@ -7,6 +7,7 @@ import * as gh from "./globalRequestHeaders.js";
  * @param {string} startUrl - Full URL to the endpoint to create a new project, see {@linkcode createUploadStartUrl}.
  * @param {Object} checksums - Object describing the to-be-uploaded files in the new project.
  * Keys are the relative paths of the files inside the project, and values are their MD5 checksums.
+ * Note that checksums are ignored for `apiVersion=1`.
  * @param {object} [options={}] - Optional parameters.
  * @param {boolean} [options.autoDedupMd5=true] - Whether to perform automatic deduplication of files in `checksums` based on matching MD5 checksums to files of the same name in a previous version of the project.
  * @param {string} [options.md5Field="md5sum"] - Field in the metadata containing the MD5 checksum for the file.
@@ -26,6 +27,7 @@ import * as gh from "./globalRequestHeaders.js";
  * Defaults to the in-built `fetch` function with {@linkcode globalRequestHeaders}.
  * @param {?number} [options.expires=null] - Number of days until the uploaded version expires.
  * If `null`, no expiry date is set, i.e., the upload is permanent.
+ * @param {number} [options.apiVersion=2] - Version of the API used for upload.
  *
  * @return {Object} Object containing the following:
  *
@@ -37,18 +39,24 @@ import * as gh from "./globalRequestHeaders.js";
  * These are primarily used by passing the entire object to {@linkcode uploadFiles}, {@linkcode completeUpload} or {@linkcode abortUpload}.
  * @async
  */
-export async function initializeUpload(startUrl, checksums, { autoDedupMd5 = true, md5Field = "md5sum", dedupMd5Paths = {}, dedupLinkPaths = {}, postFun = null, expires = null } = {}) {
+export async function initializeUpload(startUrl, checksums, { autoDedupMd5 = true, md5Field = "md5sum", dedupMd5Paths = {}, dedupLinkPaths = {}, postFun = null, expires = null, apiVersion = 2 } = {}) {
     let filenames = [];
     let sofar = new Set;
 
     for (const [k, v] of Object.entries(checksums)) {
-        let payload = { filename: k, value: { md5sum: v } };
-        if (autoDedupMd5 && !k.endsWith(".json")) {
-            payload.check = "md5";
-            payload.value.field = md5Field;
+        let payload;
+        if (apiVersion == 1) {
+            payload = k;
         } else {
-            payload.check = "simple";
+            payload = { filename: k, value: { md5sum: v } };
+            if (autoDedupMd5 && !k.endsWith(".json")) {
+                payload.check = "md5";
+                payload.value.field = md5Field;
+            } else {
+                payload.check = "simple";
+            }
         }
+
         filenames.push(payload);
         sofar.add(k);
     }
@@ -147,8 +155,14 @@ export async function uploadFiles(baseUrl, initial, contents, { putFun = null, p
 
     {
         let promises = [];
-        for (const x of initial.links) {
-            promises.push(putFun(baseUrl + x.url));
+        if (initial.links instanceof Array) { // new API returns an array with path components.
+            for (const x of initial.links) {
+                promises.push(putFun(baseUrl + x.url));
+            }
+        } else {
+            for (const x of Object.values(initial.links)) { // old API returns a dictionary of full paths.
+                promises.push(putFun(x));
+            }
         }
 
         let responses = await Promise.all(promises);
@@ -159,13 +173,16 @@ export async function uploadFiles(baseUrl, initial, contents, { putFun = null, p
 
     if (presignedPutFun == null) {
         presignedPutFun = (path, url, md5sum, value) => {
+            let headers = {
+                // Don't use global headers here! Presigned URLs don't like auth.
+                "Content-Type": (path.endsWith(".json") ? "application/json" : "application/octet-stream")
+            };
+            if (md5sum !== null) {
+                headers["Content-Md5"] = md5sum;
+            }
             return fetch(url, {
                 method: "PUT",
-                headers: {
-                    // Don't use global headers here! Presigned URLs don't like auth.
-                    "Content-Type": (path.endsWith(".json") ? "application/json" : "application/octet-stream"),
-                    "Content-Md5": md5sum 
-                },
+                headers: headers,
                 body: value
             });
         };
@@ -173,11 +190,20 @@ export async function uploadFiles(baseUrl, initial, contents, { putFun = null, p
 
     {
         let promises = [];
-        for (const x of initial.presigned_urls) {
-            if (!(x.filename in contents)) {
-                throw new Error("failed to find path '" + x.filename + "' in contents");
+        if (initial.presigned_urls instanceof Array) { // new API returns an array.
+            for (const x of initial.presigned_urls) {
+                if (!(x.filename in contents)) {
+                    throw new Error("failed to find path '" + x.filename + "' in contents");
+                }
+                promises.push(presignedPutFun(x.filename, x.url, x.md5sum, contents[x.filename]));
             }
-            promises.push(presignedPutFun(x.filename, x.url, x.md5sum, contents[x.filename]));
+        } else {
+            for (const [name, url] of Object.entries(initial.presigned_urls)) { // old API just returns the path directly, with no MD5sum.
+                if (!(name in contents)) {
+                    throw new Error("failed to find path '" + name + "' in contents");
+                }
+                promises.push(presignedPutFun(name, url, null, contents[name]));
+            }
         }
 
         await Promise.all(promises);
@@ -240,7 +266,13 @@ export async function completeUpload(baseUrl, initial, { indexWait = 600, isPubl
     if (viewers !== null) {
         permissions.viewers = viewers;
     }
-    let url = baseUrl + initial.completion_url;
+
+    let url;
+    if (initial.completion_url.startsWith("http")) { 
+        url = initial.completion_url; // old API returns the entire URL.
+    } else {
+        url = baseUrl + initial.completion_url;
+    }
     let res = await putFun(url, permissions);
     await err.checkHttpResponse(res, "failed to complete the project upload");
 
