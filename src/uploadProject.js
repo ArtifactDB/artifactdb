@@ -27,7 +27,10 @@ export async function uploadProject(baseUrl, project, version, checksums, conten
         await up.uploadFiles(baseUrl, init, contents, uploadArgs);
         await up.completeUpload(baseUrl, init, completeArgs);
     } catch (e) {
-        await up.abortUpload(baseUrl, init);
+        // Try to abort it, but make sure we throw the original error if we can't.
+        try {
+            await up.abortUpload(baseUrl, init);
+        } finally {}
         throw e;
     }
 

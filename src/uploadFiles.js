@@ -314,7 +314,7 @@ export async function completeUpload(baseUrl, initial, { indexWait = 600, isPubl
  * @return The project upload is aborted; nothing is returned.
  * @async
  */
-export async function abortUpload(baseUrl, initial, { putFun = null }) {
+export async function abortUpload(baseUrl, initial, { putFun = null } = {}) {
     if (putFun == null) {
         putFun = gh.quickPutJson;
     }
