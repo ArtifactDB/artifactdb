@@ -195,7 +195,7 @@ This is mainly used to set the <code>Authorization</code> header for authenticat
 
     
 
-    <h4 class="name" id="abortUpload"><span class="type-signature">(async) </span>abortUpload<span class="signature">(baseUrl, initial)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="abortUpload"><span class="type-signature">(async) </span>abortUpload<span class="signature">(baseUrl, initial, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
@@ -207,7 +207,7 @@ This is mainly used to set the <code>Authorization</code> header for authenticat
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="uploadFiles.js.html">uploadFiles.js</a>, <a href="uploadFiles.js.html#line317">line 317</a>
+        <a href="uploadFiles.js.html">uploadFiles.js</a>, <a href="uploadFiles.js.html#line319">line 319</a>
     </li></ul></dd>
     
 
@@ -359,7 +359,69 @@ This is mainly used to set the <code>Authorization</code> header for authenticat
 
         <tr>
             
-                <td class="name"><code>options.putFun</code></td>
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Optional parameters.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>putFun</code></td>
             
 
             <td class="type">
@@ -401,6 +463,13 @@ If <code>null</code>, it defaults to <code>fetch</code> with the <a href="global
     </tbody>
 </table>
 
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
 
 
 
@@ -434,7 +503,7 @@ If <code>null</code>, it defaults to <code>fetch</code> with the <a href="global
 
     
 
-    <h4 class="name" id="completeUpload"><span class="type-signature">(async) </span>completeUpload<span class="signature">(baseUrl, initial)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id="completeUpload"><span class="type-signature">(async) </span>completeUpload<span class="signature">(baseUrl, initial, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Object}</span></h4>
 
     
 
@@ -446,7 +515,7 @@ If <code>null</code>, it defaults to <code>fetch</code> with the <a href="global
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="uploadFiles.js.html">uploadFiles.js</a>, <a href="uploadFiles.js.html#line257">line 257</a>
+        <a href="uploadFiles.js.html">uploadFiles.js</a>, <a href="uploadFiles.js.html#line258">line 258</a>
     </li></ul></dd>
     
 
@@ -598,7 +667,69 @@ If <code>null</code>, it defaults to <code>fetch</code> with the <a href="global
 
         <tr>
             
-                <td class="name"><code>options.indexWait</code></td>
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Optional parameters.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>indexWait</code></td>
             
 
             <td class="type">
@@ -637,7 +768,7 @@ If <code>null</code>, it defaults to <code>fetch</code> with the <a href="global
 
         <tr>
             
-                <td class="name"><code>options.isPublic</code></td>
+                <td class="name"><code>isPublic</code></td>
             
 
             <td class="type">
@@ -677,7 +808,7 @@ This only has an effect for new projects without any prior versions.</p></td>
 
         <tr>
             
-                <td class="name"><code>options.viewers</code></td>
+                <td class="name"><code>viewers</code></td>
             
 
             <td class="type">
@@ -720,7 +851,7 @@ Defaults to an empty list.</p></td>
 
         <tr>
             
-                <td class="name"><code>options.owners</code></td>
+                <td class="name"><code>owners</code></td>
             
 
             <td class="type">
@@ -761,7 +892,7 @@ Default depends on the instance policy, usually set to the uploading user.</p></
 
         <tr>
             
-                <td class="name"><code>options.getFun</code></td>
+                <td class="name"><code>getFun</code></td>
             
 
             <td class="type">
@@ -803,7 +934,7 @@ Defaults to the in-built <code>fetch</code> function with <a href="global.html#g
 
         <tr>
             
-                <td class="name"><code>options.putFun</code></td>
+                <td class="name"><code>putFun</code></td>
             
 
             <td class="type">
@@ -844,6 +975,13 @@ It should accept:</p>
 <li>An object containing the permissions to be sent in the request.</li>
 </ul>
 <p>If <code>null</code>, it defaults to <code>fetch</code> with the <a href="global.html#globalRequestHeaders"><code>globalRequestHeaders</code></a>.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -3474,7 +3612,7 @@ Note that checksums are ignored for <code>apiVersion=1</code>.</p></td>
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">Object</span>
 
 
             
@@ -7183,7 +7321,7 @@ See <a href="global.html#uploadFiles"><code>uploadFiles</code></a> for more deta
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Aug 25 2023 14:04:03 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Aug 25 2023 14:07:31 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
