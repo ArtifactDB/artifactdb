@@ -1,6 +1,6 @@
 {
   "name": "artifactdb",
-  "version": "0.1.2",
+  "version": "0.1.3", 
   "description": "Javascript client for working with the ArtifactDB REST API.",
   "author": {
     "name": "Aaron Lun",

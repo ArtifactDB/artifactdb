@@ -8,7 +8,7 @@ import * as gh from "./globalRequestHeaders.js";
  * @param {Object} checksums - Object describing the to-be-uploaded files in the new project.
  * Keys are the relative paths of the files inside the project, and values are their MD5 checksums.
  * Note that checksums are ignored for `apiVersion=1`.
- * @param {object} [options={}] - Optional parameters.
+ * @param {Object} [options={}] - Optional parameters.
  * @param {boolean} [options.autoDedupMd5=true] - Whether to perform automatic deduplication of files in `checksums` based on matching MD5 checksums to files of the same name in a previous version of the project.
  * @param {string} [options.md5Field="md5sum"] - Field in the metadata containing the MD5 checksum for the file.
  * Only used for MD5-based deduplication.
@@ -227,6 +227,7 @@ export async function uploadFiles(baseUrl, initial, contents, { putFun = null, p
  *
  * @param {string} baseUrl - Base URL of the ArtifactDB REST API.
  * @param {Object} initial - Object returned by {@linkcode initializeUpload}.
+ * @param {Object} [options={}] - Optional parameters.
  * @param {number} [options.indexWait=600] - Number of seconds to wait for indexing to complete/fail before returning.
  * @param {boolean} [options.isPublic=true] - Whether to make the project publicly visible.
  * This only has an effect for new projects without any prior versions.
@@ -308,6 +309,7 @@ export async function completeUpload(baseUrl, initial, { indexWait = 600, isPubl
  *
  * @param {string} baseUrl - Base URL of the ArtifactDB REST API.
  * @param {Object} initial - Object returned by {@linkcode initializeUpload}.
+ * @param {Object} [options={}] - Optional parameters.
  * @param {?function} [options.putFun=null] - Function that performs a PUT request without any body and returns a Response object.
  * If `null`, it defaults to `fetch` with the {@linkcode globalRequestHeaders}.
  *
