@@ -8,7 +8,7 @@ import * as gh from "./globalRequestHeaders.js";
  * @param {string} id - The full ArtifactDB identifier of the resource of interest.
  * @param {object} [options={}] - Optional parameters.
  * @param {boolean} [options.followLink=true] - Whether to follow links from redirection schemas.
- * @param {boolean} [options.raw=true] - Whether to download the raw metadata from S3.
+ * @param {boolean} [options.raw=false] - Whether to download the raw metadata from S3.
  * This is slower but avoids some loss of information due to Elasticsearch transformations.
  * @param {?function} [options.getFun=null] - Function that accepts a single string containing a URL and returns a Response object (or a promise resolving to a Response).
  * Defaults to the in-built `fetch` function with {@linkcode globalRequestHeaders}.
