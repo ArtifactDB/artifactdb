@@ -159,15 +159,21 @@ export async function uploadFiles(baseUrl, initial, contents, { putFun = null, p
             for (const x of initial.links) {
                 promises.push(putFun(baseUrl + x.url));
             }
+
+            let responses = await Promise.all(promises);
+            for (var i = 0; i < responses.length; i++) {
+                await err.checkHttpResponse(responses[i], "failed to create links for path '" + initial.links[i].filename + "'");
+            }
+
         } else {
             for (const x of Object.values(initial.links)) { // old API returns a dictionary of full paths.
                 promises.push(putFun(x));
             }
-        }
 
-        let responses = await Promise.all(promises);
-        for (var i = 0; i < responses.length; i++) {
-            await err.checkHttpResponse(responses[i], "failed to create links for path '" + initial.links[i].filename + "'");
+            let responses = await Promise.all(promises);
+            for (var i = 0; i < responses.length; i++) {
+                await err.checkHttpResponse(responses[i], "failed to create links for path '" + initial.links[i] + "'");
+            }
         }
     }
 
