@@ -7,6 +7,6 @@ test("listProjects works correctly", async () => {
     // enough projects in the test instance to hit the pagination,
     // nor can we guarantee that the test project is first.
     let listing = await adb.listProjects(exampleUrl);
-    expect(listing.projects.length > 0);
-    expect(listing.projects[0].versions.length > 0);
+    expect(listing.length > 0);
+    expect(listing[0].versions.length > 0);
 })
