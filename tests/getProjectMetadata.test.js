@@ -29,9 +29,9 @@ test("getProjectMetadata works correctly for a specific version", async () => {
 test("getFileMetadata obtains raw metadata correctly", async () => {
     let res = await adb.getProjectMetadata(exampleUrl, "test-public", { raw: true });
     expect(res.metadata.length > 0);
-
-//    for (const x of res.metadata) {
-//        expect("_extra" in x).toBe(false) // currently not the case!
-//    }
+    for (const x of res.metadata) {
+        expect("$schema" in x).toBe(true);
+        expect("_extra" in x).toBe(false) 
+    }
 })
 
