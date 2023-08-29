@@ -4,20 +4,20 @@ import "isomorphic-fetch";
 
 test("getProjectMetadata works correctly", async () => {
     let res = await adb.getProjectMetadata(exampleUrl, "test-public");
-    expect(res.metadata.length > 0);
+    expect(res.length > 0);
 
     // Double-check that we get the same results.
-    let first = res.metadata[0];
+    let first = res[0];
     let first_again = await adb.getFileMetadata(exampleUrl, first["_extra"]["id"]);
     expect(first_again).toEqual(first);
 }) 
 
 test("getProjectMetadata works correctly for a specific version", async () => {
     let res = await adb.getProjectMetadata(exampleUrl, "test-public", { version: "base" });
-    expect(res.metadata.length > 0);
+    expect(res.length > 0);
 
     let available = new Set;
-    for (const x of res.metadata) {
+    for (const x of res) {
         available.add(x._extra.version);
     }
 
@@ -28,8 +28,8 @@ test("getProjectMetadata works correctly for a specific version", async () => {
 
 test("getFileMetadata obtains raw metadata correctly", async () => {
     let res = await adb.getProjectMetadata(exampleUrl, "test-public", { raw: true });
-    expect(res.metadata.length > 0);
-    for (const x of res.metadata) {
+    expect(res.length > 0);
+    for (const x of res) {
         expect("$schema" in x).toBe(true);
         expect("_extra" in x).toBe(false) 
     }

@@ -12,16 +12,37 @@ import * as gh from "./globalRequestHeaders.js";
  * @param {?function} [options.getFun=null] - Function that accepts a single string containing a URL and returns a Response object (or a promise resolving to a Response).
  * Defaults to the in-built `fetch` function with the {@linkcode globalRequestHeaders}.
  *
- * @return {Object} Object containing:
- *
- * - `projects`, an array of objects where each object corresponds to a project and contains the `project` name and an array of strings containing the `versions`.
- * - `next_page`, a string containing the URL to the next page of projects, to be used as `pageUrl` in {@listProjectsNext}.
- *   If this is absent, it can be assumed that there are no further pages.
+ * @return {Array} Array of objects where each object corresponds to a project and contains the `project` name and an array of strings containing the `versions`.
  *
  * @async
  */
 export async function listProjects(baseUrl, { number = 50, getFun = null } = {}) {
-    return listProjectsNext(baseUrl, "/projects", { number: number, getFun: getFun });
+    let page_url = listProjectsStart();
+
+    let collected = [];
+    while (collected.length < number) {
+        let current = await listProjectsNext(baseUrl, page_url, { number: number, getFun: getFun });
+        for (const x of current.projects) {
+            collected.push(x);
+        }
+
+        if ("next_page" in current) {
+            page_url = current.next_page;
+        } else {
+            break;
+        }
+    }
+
+    return collected;
+}
+
+/**
+ * Obtain the endpoint to list available projects from an ArtifactDB REST API.
+ *
+ * @return {string} String containing the endpoint to use as `pageUrl` in {@linkcode listProjectsNext}.
+ */
+export function listProjectsStart() {
+    return "/projects";
 }
 
 /**
@@ -29,6 +50,7 @@ export async function listProjects(baseUrl, { number = 50, getFun = null } = {})
  *
  * @param {string} baseUrl - Base URL of the REST API.
  * @param {string} pageUrl - URL component to the next page of results.
+ * For the first invocation of this function, users should obtain the URL from {@linkcode listProjectsStart}.
  * @param {object} [options={}] - Optional parameters.
  * @param {number} [options.number=50] - Number of projects to return.
  * This may be interpreted by the API as a hint or as a maximum.
