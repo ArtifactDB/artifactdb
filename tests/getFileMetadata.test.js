@@ -20,3 +20,8 @@ test("getFileMetadata follows links correctly", async () => {
     expect(contents2["$schema"]).toMatch("redirection/");
 })
 
+test("getFileMetadata obtains raw metadata correctly", async () => {
+    let contents = await adb.getFileMetadata(exampleUrl, exampleId, { raw: true });
+    expect("$schema" in contents).toBe(true); 
+    expect("_extra" in contents).toBe(false);
+})
