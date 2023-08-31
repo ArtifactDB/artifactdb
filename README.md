@@ -103,12 +103,8 @@ A similar code chunk can be used to create new versions of an existing project, 
 
 ```js
 import * as hash from "hash-wasm";
-let existing = adb.getProjectMetadata(example_url, "test-public", { 
-    version: "base",
-    raw: true // get raw metadata for faithful re-upload.
- });
 
-let cloned = adb.prepareCloneUpload(existing);
+let cloned = adb.prepareCloneUploadFromUrl(example_url, "test-public", "base");
 let contents = cloned.metadata;
 let links = cloned.links;
 
