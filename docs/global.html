@@ -29,7 +29,7 @@
     
     <input type="text" id="nav-search" placeholder="Search" />
     
-    <h2><a href="index.html">Home</a></h2><h2><a href="https://code.roche.com/vida/artifactdb.js" target="_blank" class="menu-item" id="repository" >Code Repo</a></h2><h3>Classes</h3><ul><li><a href="HttpError.html">HttpError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#abortUpload">abortUpload</a></li><li><a href="global.html#completeUpload">completeUpload</a></li><li><a href="global.html#createUploadStartUrl">createUploadStartUrl</a></li><li><a href="global.html#extractByNameOrIndex">extractByNameOrIndex</a></li><li><a href="global.html#getFile">getFile</a></li><li><a href="global.html#getFileMetadata">getFileMetadata</a></li><li><a href="global.html#getPermissions">getPermissions</a></li><li><a href="global.html#getProjectMetadata">getProjectMetadata</a></li><li><a href="global.html#getProjectMetadataNext">getProjectMetadataNext</a></li><li><a href="global.html#getProjectMetadataStart">getProjectMetadataStart</a></li><li><a href="global.html#globalRequestHeaders">globalRequestHeaders</a></li><li><a href="global.html#initializeUpload">initializeUpload</a></li><li><a href="global.html#listProjects">listProjects</a></li><li><a href="global.html#listProjectsNext">listProjectsNext</a></li><li><a href="global.html#listProjectsStart">listProjectsStart</a></li><li><a href="global.html#listProjectVersions">listProjectVersions</a></li><li><a href="global.html#packId">packId</a></li><li><a href="global.html#parseLinkHeader">parseLinkHeader</a></li><li><a href="global.html#prepareCloneUpload">prepareCloneUpload</a></li><li><a href="global.html#setPermissions">setPermissions</a></li><li><a href="global.html#unpackId">unpackId</a></li><li><a href="global.html#uploadFiles">uploadFiles</a></li><li><a href="global.html#uploadProject">uploadProject</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://code.roche.com/vida/artifactdb.js" target="_blank" class="menu-item" id="repository" >Code Repo</a></h2><h3>Classes</h3><ul><li><a href="HttpError.html">HttpError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#abortUpload">abortUpload</a></li><li><a href="global.html#completeUpload">completeUpload</a></li><li><a href="global.html#createUploadStartUrl">createUploadStartUrl</a></li><li><a href="global.html#extractByNameOrIndex">extractByNameOrIndex</a></li><li><a href="global.html#getFile">getFile</a></li><li><a href="global.html#getFileMetadata">getFileMetadata</a></li><li><a href="global.html#getPermissions">getPermissions</a></li><li><a href="global.html#getProjectMetadata">getProjectMetadata</a></li><li><a href="global.html#getProjectMetadataNext">getProjectMetadataNext</a></li><li><a href="global.html#getProjectMetadataStart">getProjectMetadataStart</a></li><li><a href="global.html#globalRequestHeaders">globalRequestHeaders</a></li><li><a href="global.html#initializeUpload">initializeUpload</a></li><li><a href="global.html#listProjects">listProjects</a></li><li><a href="global.html#listProjectsNext">listProjectsNext</a></li><li><a href="global.html#listProjectsStart">listProjectsStart</a></li><li><a href="global.html#listProjectVersions">listProjectVersions</a></li><li><a href="global.html#packId">packId</a></li><li><a href="global.html#parseLinkHeader">parseLinkHeader</a></li><li><a href="global.html#prepareCloneUploadFromMetadata">prepareCloneUploadFromMetadata</a></li><li><a href="global.html#prepareCloneUploadFromUrl">prepareCloneUploadFromUrl</a></li><li><a href="global.html#setPermissions">setPermissions</a></li><li><a href="global.html#unpackId">unpackId</a></li><li><a href="global.html#uploadFiles">uploadFiles</a></li><li><a href="global.html#uploadProject">uploadProject</a></li></ul>
 </nav>
 
 <div id="main">
@@ -5782,7 +5782,7 @@ This should not contain <code>&quot;@&quot;</code>.</p></td>
 
     
 
-    <h4 class="name" id="prepareCloneUpload"><span class="type-signature"></span>prepareCloneUpload<span class="signature">(metadata, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id="prepareCloneUploadFromMetadata"><span class="type-signature"></span>prepareCloneUploadFromMetadata<span class="signature">(project, version, metadata, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Object}</span></h4>
 
     
 
@@ -5794,7 +5794,7 @@ This should not contain <code>&quot;@&quot;</code>.</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="prepareCloneUpload.js.html">prepareCloneUpload.js</a>, <a href="prepareCloneUpload.js.html#line20">line 20</a>
+        <a href="prepareCloneUpload.js.html">prepareCloneUpload.js</a>, <a href="prepareCloneUpload.js.html#line45">line 45</a>
     </li></ul></dd>
     
 
@@ -5878,6 +5878,76 @@ However, the same approach can be used to clone a project version under a comple
 
         <tr>
             
+                <td class="name"><code>project</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Name of the project.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>version</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Version of interest.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>metadata</code></td>
             
 
@@ -5906,7 +5976,8 @@ However, the same approach can be used to clone a project version under a comple
                 </td>
             
 
-            <td class="description last"><p>Array of objects containing the metadata for a particular version of a project, typically from <a href="global.html#getProjectMetadata"><code>getProjectMetadata</code></a>.</p></td>
+            <td class="description last"><p>Array of objects containing the metadata for the specified version,
+typically generated from <a href="global.html#getProjectMetadata"><code>getProjectMetadata</code></a> with <code>raw = true</code>.</p></td>
         </tr>
 
     
@@ -6045,11 +6116,406 @@ Setting this to <code>false</code> is useful when further modifications to the m
 <ul>
 <li><code>metadata</code>: object containing the JSON metadata for all files.
 Keys are the relative paths to the metadata files themselves (not the file artifacts), while values are the metadata objects for those files.
-This should used as <code>contents</code> in <a href="global.html#uploadProject"><code>uploadProject</code></a> or <a href="global.html#initializeUpload"><code>initializeUpload</code></a> (after stringification if <code>stringify = false</code>).</li>
+This should used as <code>contents</code> in <a href="global.html#uploadProject"><code>uploadProject</code></a> or <a href="global.html#uploadFiles"><code>uploadFiles</code></a> (after stringification if <code>stringify = false</code>).</li>
 <li><code>links</code>: object containing the links to be created to the existing version of a project.
 Keys are the relative paths of the file artifacts to be linked from, while values are the ArtifactDB identifiers of the artifacts to be linked to.
-This should be used as <code>dedupLinkPaths</code> in <a href="global.html#uploadProject"><code>uploadProject</code></a> or <a href="global.html#initializeUpload"><code>initializeUpload</code></a>.</li>
+This should be used as <code>dedupLinkPaths</code> in <a href="global.html#initializeUpload"><code>initializeUpload</code></a> or <a href="global.html#uploadProject"><code>uploadProject</code></a> (via <code>initArgs</code>).</li>
 </ul>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="prepareCloneUploadFromUrl"><span class="type-signature"></span>prepareCloneUploadFromUrl<span class="signature">(baseUrl, project, version, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="prepareCloneUpload.js.html">prepareCloneUpload.js</a>, <a href="prepareCloneUpload.js.html#line18">line 18</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>Fetch a project version's metadata and prepare a clone for upload.
+This is a convenience wrapper around <a href="global.html#getProjectMetadata"><code>getProjectMetadata</code></a> and <a href="global.html#prepareCloneUploadFromMetadata"><code>prepareCloneUploadFromMetadata</code></a>;
+see the latter for more details.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>baseUrl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Base URL of the REST API.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>project</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Name of the project.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>version</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Version of interest.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Optional parameters.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>stringify</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>true</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>See <a href="global.html#prepareCloneUploadFromMetadata"><code>prepareCloneUploadFromMetadata</code></a> for more details.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>getFun</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>null</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>See <a href="global.html#getProjectMetadata"><code>getProjectMetadata</code></a> for more details.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Object containing values to be used for uploaded, see <a href="global.html#prepareCloneUploadFromMetadata"><code>prepareCloneUploadFromMetadata</code></a> for more details.</p>
 </div>
 
 
@@ -7701,7 +8167,7 @@ See <a href="global.html#uploadFiles"><code>uploadFiles</code></a> for more deta
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Tue Aug 29 2023 15:20:17 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Thu Aug 31 2023 15:17:24 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
