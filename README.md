@@ -104,7 +104,7 @@ A similar code chunk can be used to create new versions of an existing project, 
 ```js
 import * as hash from "hash-wasm";
 
-let cloned = adb.prepareCloneUploadFromUrl(example_url, "test-public", "base");
+let cloned = await adb.prepareCloneUploadFromUrl(example_url, "test-public", "base");
 let contents = cloned.metadata;
 let links = cloned.links;
 
@@ -112,6 +112,10 @@ let links = cloned.links;
  * as befitting a new version of the project. Typical modifications
  * might include updating the metadata, adding or removing files,
  * replacing the contents of certain files, and so on.
+ *
+ * If you plan to modify the metadata, you can set stringify = false
+ * in prepareCloneUploadFromUrl, but then you'll have to handle
+ * the stringification yourself before calling uploadProject.
  */
 
 let checksums = {};
